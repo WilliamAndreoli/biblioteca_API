@@ -1,0 +1,38 @@
+package com.biblioteca.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.biblioteca.entities.Tipo_Usuario;
+import com.biblioteca.repositories.Tipo_UsuarioRepository;
+
+import jakarta.transaction.Transactional;
+
+@Service
+public class Tipo_UsuarioService {
+
+	@Autowired
+	private Tipo_UsuarioRepository tipo_usuarioRepository;
+	
+	public List<Tipo_Usuario> findAll() {
+		return tipo_usuarioRepository.findAll();
+	}
+	
+	public Tipo_Usuario save(Tipo_Usuario tipo_usuario) {
+        return tipo_usuarioRepository.save(tipo_usuario);
+    }
+
+	//Deleta por nome
+	@Transactional
+    public void deleteByDescricao(String descricao) {
+        tipo_usuarioRepository.deleteByDescricao(descricao);
+    }
+
+	//Busca por nome
+	public Tipo_Usuario findByDescricao(String descricao) {
+        return tipo_usuarioRepository.findByDescricao(descricao);
+    }
+	
+}
