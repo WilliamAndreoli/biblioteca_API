@@ -24,13 +24,14 @@ public class EditoraService {
         return editoraRepository.save(editora);
     }
 
+	//Deleta por nome
 	@Transactional
     public void deleteByNome(String nome) {
         editoraRepository.deleteByNome(nome);
     }
 
 	//Busca por nome
-	public List<Editora> findByNome(String nome) {
+	public Editora findByNome(String nome) {
         return editoraRepository.findByNome(nome);
     }
 	
