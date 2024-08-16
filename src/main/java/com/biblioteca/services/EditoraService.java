@@ -18,5 +18,9 @@ public class EditoraService {
 		return editoraRepository.findAll();
 	}
 
+	//Busca por nome
+	public List<Editora> findByNome(String nome) {
+        return editoraRepository.findByNome(nome);
+    }
 	
 }
