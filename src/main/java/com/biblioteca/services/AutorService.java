@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Autor;
-import com.biblioteca.entities.Editora;
 import com.biblioteca.repositories.AutorRepository;
 
 import jakarta.transaction.Transactional;
@@ -33,11 +32,6 @@ public class AutorService {
 	@Transactional
     public void deleteByNome(String nome) {
         autorRepository.deleteByNome(nome);
-    }
-
-	//Busca por nome
-	public Editora findByNome(String nome) {
-        return autorRepository.findByNome(nome);
     }
 	
 }
