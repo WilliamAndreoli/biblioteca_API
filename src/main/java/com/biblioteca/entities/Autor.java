@@ -6,10 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-public class Editora {
+public class Autor {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +18,10 @@ public class Editora {
 	
 	public Integer getId() {
 		return id;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	
 	public String getNome() {
@@ -50,10 +53,9 @@ public class Editora {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Editora other = (Editora) obj;
+		Autor other = (Autor) obj;
 		return Objects.equals(id, other.id);
 	}
-	
 	
 	
 	
