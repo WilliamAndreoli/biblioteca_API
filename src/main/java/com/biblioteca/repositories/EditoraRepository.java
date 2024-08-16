@@ -10,4 +10,6 @@ public interface EditoraRepository extends JpaRepository<Editora, Integer>{
 
 	List<Editora> findByNome(String nome);
 	
+	void deleteByNome(String nome);
+	
 }

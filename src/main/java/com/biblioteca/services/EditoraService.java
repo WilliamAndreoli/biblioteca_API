@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.biblioteca.entities.Editora;
 import com.biblioteca.repositories.EditoraRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class EditoraService {
 
@@ -17,6 +19,15 @@ public class EditoraService {
 	public List<Editora> findAll() {
 		return editoraRepository.findAll();
 	}
+	
+	public Editora save(Editora editora) {
+        return editoraRepository.save(editora);
+    }
+
+	@Transactional
+    public void deleteByNome(String nome) {
+        editoraRepository.deleteByNome(nome);
+    }
 
 	//Busca por nome
 	public List<Editora> findByNome(String nome) {
