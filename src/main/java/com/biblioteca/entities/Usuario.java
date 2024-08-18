@@ -1,7 +1,13 @@
 package com.biblioteca.entities;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +24,10 @@ public class Usuario {
 	private String nome;
 	private String email;
 	private String senha;
+	
 	@ManyToOne
     @JoinColumn(name = "tipo_usuario_id", nullable = false)
-	private Tipo_Usuario tipo_usuario;
+	private Tipo_Usuario tipo_Usuario;
 	
 	public Integer getId() {
 		return id;
@@ -55,12 +62,16 @@ public class Usuario {
 	}
 	
 	public Tipo_Usuario getTipo_usuario() {
-		return tipo_usuario;
+		return tipo_Usuario;
 	}
 	
 	public void setTipo_usuario(Tipo_Usuario tipo_usuario) {
-		this.tipo_usuario = tipo_usuario;
+		this.tipo_Usuario = tipo_usuario;
 	}
+	
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + tipo_Usuario.getDescricao().toUpperCase()));
+    }
 
 	@Override
 	public int hashCode() {

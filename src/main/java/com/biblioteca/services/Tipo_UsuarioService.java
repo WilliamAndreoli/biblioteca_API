@@ -1,6 +1,7 @@
 package com.biblioteca.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,5 +35,9 @@ public class Tipo_UsuarioService {
 	public Tipo_Usuario findByDescricao(String descricao) {
         return tipo_usuarioRepository.findByDescricao(descricao);
     }
+	
+	public Optional<Tipo_Usuario> findById(Integer id) {
+		return tipo_usuarioRepository.findById(id);
+	}
 	
 }

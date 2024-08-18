@@ -30,7 +30,7 @@ public class Tipo_UsuarioController {
 	
 	// Buscar por descricao
     @GetMapping("/descricao/{descricao}")
-    public Tipo_Usuario findByNome(@PathVariable String descricao) {
+    public Tipo_Usuario findByDescricao(@PathVariable String descricao) {
     	return tipo_usuarioService.findByDescricao(descricao);
     }
 	
