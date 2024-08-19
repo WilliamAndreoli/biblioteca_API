@@ -48,7 +48,13 @@ public class WebSecurityConfig {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
 							.requestMatchers("/usuarios/**").hasRole("ADMIN")
+							.requestMatchers("/livros/**").permitAll()
+							.requestMatchers("/editoras/**").permitAll()
+							.requestMatchers("/areas/**").permitAll()
+							.requestMatchers("/emprestimos/**").hasRole("ADMIN")
 							.anyRequest().authenticated());
+		
+		//TODO implementar delete apenas para ADMIN
 		
 		http.addFilterBefore(authFilterToken(), UsernamePasswordAuthenticationFilter.class);
 		

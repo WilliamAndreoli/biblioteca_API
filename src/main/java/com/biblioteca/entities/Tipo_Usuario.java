@@ -13,8 +13,11 @@ public class Tipo_Usuario {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
+	
 	private String descricao;
+	
 	private Integer dias_emprestimo;
+	
 	private Double multa_diaria;
 	
 	public Integer getId() {

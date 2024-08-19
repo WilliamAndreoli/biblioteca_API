@@ -13,7 +13,9 @@ public class Autor {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	private String nome;
+	
 	private String endereco;
 	
 	public Integer getId() {
