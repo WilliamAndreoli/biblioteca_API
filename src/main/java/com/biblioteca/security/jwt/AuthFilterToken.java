@@ -28,6 +28,7 @@ public class AuthFilterToken extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+			System.out.println("AuthFilterToken invoked for request: " + request.getRequestURI());
 		try {
 			
 			String jwt = getToken(request);
@@ -43,7 +44,7 @@ public class AuthFilterToken extends OncePerRequestFilter {
 				
 			}
 		} catch(Exception e) {
-			System.out.println("Ocorru um erro ao processar o token");
+			System.out.println("Ocorru um erro ao processar o token: " + e.getMessage());
 		} finally {
 			filterChain.doFilter(request, response);
 		}
@@ -52,7 +53,7 @@ public class AuthFilterToken extends OncePerRequestFilter {
 	
 	private String getToken(HttpServletRequest request) {
 		String headerToken = request.getHeader("Authorization");
-		if(StringUtils.hasText("headerToken") && headerToken.startsWith("Bearer")) {
+		if(StringUtils.hasText(headerToken) && headerToken.startsWith("Bearer ")) {
 			return headerToken.replace("Bearer ", "");
 		}
 		return null;

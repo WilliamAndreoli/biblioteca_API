@@ -61,5 +61,7 @@ public class UsuarioDTO {
     public void setTipoUsuario(Tipo_Usuario tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
+    
+    
 	
 }
