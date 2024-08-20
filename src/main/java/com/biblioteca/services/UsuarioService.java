@@ -36,8 +36,6 @@ public class UsuarioService {
     public UsuarioDTO save(UsuarioDTO usuarioDto) {
         Usuario usuario = convertToEntity(usuarioDto);
         
-        System.out.print(usuario.getNome());
-        
         // Verificando se o Tipo_Usuario já existe
         Tipo_Usuario tipoUsuario = usuario.getTipo_usuario();
         if (tipoUsuario != null) { 

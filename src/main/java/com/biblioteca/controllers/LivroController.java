@@ -34,13 +34,12 @@ public class LivroController {
 		return livroService.findById(id);
 	}
 
-	/*
+	
 	@PostMapping
 	public Livro createLivro(@RequestBody Livro livro) {
 		return livroService.save(livro);
-	}*/
+	}
 
-	/*
 	@PutMapping("/{id}")
 	public ResponseEntity<Livro> updateLivro(@PathVariable Integer id,
 			@RequestBody Livro livroDetails) {
@@ -61,7 +60,7 @@ public class LivroController {
 		livro.setAno_publicacao(livroDetails.getAno_publicacao());
 
 		return ResponseEntity.ok(livroService.save(livro));
-	}*/
+	}
 
 	@DeleteMapping("/id/{id}")
 	public ResponseEntity<Void> deleteLivroById(@PathVariable Integer id) {

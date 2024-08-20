@@ -3,6 +3,7 @@ package com.biblioteca.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -47,14 +48,29 @@ public class WebSecurityConfig {
 			.exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll()
-							.requestMatchers("/usuarios/**").hasRole("ADMIN")
-							.requestMatchers("/livros/**").permitAll()
-							.requestMatchers("/editoras/**").permitAll()
-							.requestMatchers("/areas/**").permitAll()
-							.requestMatchers("/emprestimos/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.POST,"/usuarios/**").permitAll()
+							.requestMatchers(HttpMethod.GET,"/usuarios/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.POST,"/usuarios/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT,"/usuarios/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE,"/usuarios/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.GET, "/livros/**").permitAll()
+							.requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.GET, "/editoras/**").permitAll()
+							.requestMatchers(HttpMethod.POST, "/editoras/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT, "/editoras/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/editoras/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.GET, "/areas/**").permitAll()
+							.requestMatchers(HttpMethod.POST, "/areas/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT, "/areas/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/areas/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.POST, "/emprestimos/**").permitAll()
+							.requestMatchers(HttpMethod.GET, "/emprestimos/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/emprestimos/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT, "/emprestimos/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.POST, "/emprestimos/**").permitAll()
 							.anyRequest().authenticated());
-		
-		//TODO implementar delete apenas para ADMIN
 		
 		http.addFilterBefore(authFilterToken(), UsernamePasswordAuthenticationFilter.class);
 		
