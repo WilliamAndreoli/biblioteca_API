@@ -106,12 +106,16 @@ public class UsuarioService {
         usuario.setEmail(usuarioDto.getEmail());
         usuario.setSenha(usuarioDto.getSenha());
         
-        Tipo_Usuario tipoUsuario = new Tipo_Usuario(); 
-        tipoUsuario.setId(usuarioDto.getTipoUsuario().getId());
-        tipoUsuario.setDescricao(usuarioDto.getTipoUsuario().getDescricao());
-        tipoUsuario.setDias_emprestimo(usuarioDto.getTipoUsuario().getDias_emprestimo());
-        tipoUsuario.setMulta_diaria(usuarioDto.getTipoUsuario().getMulta_diaria());
-        usuario.setTipo_usuario(tipoUsuario);
+        if (usuarioDto.getTipoUsuario() != null) {
+        	Tipo_Usuario tipoUsuario = new Tipo_Usuario();
+        	tipoUsuario.setId(usuarioDto.getTipoUsuario().getId());
+            tipoUsuario.setDescricao(usuarioDto.getTipoUsuario().getDescricao());
+            tipoUsuario.setDias_emprestimo(usuarioDto.getTipoUsuario().getDias_emprestimo());
+            tipoUsuario.setMulta_diaria(usuarioDto.getTipoUsuario().getMulta_diaria());
+            usuario.setTipo_usuario(tipoUsuario);
+        } else {
+        	throw new IllegalArgumentException("Tipo de usuário não pode ser nulo");
+        }
 
         return usuario;
     }

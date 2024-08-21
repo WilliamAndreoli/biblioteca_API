@@ -1,15 +1,19 @@
 package com.biblioteca.services;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Area;
+import com.biblioteca.entities.Autor;
 import com.biblioteca.entities.Editora;
 import com.biblioteca.entities.Livro;
 import com.biblioteca.repositories.AreaRepository;
+import com.biblioteca.repositories.AutorRepository;
 import com.biblioteca.repositories.EditoraRepository;
 import com.biblioteca.repositories.LivroRepository;
 
@@ -26,6 +30,9 @@ public class LivroService {
 
 	@Autowired
 	private EditoraRepository editoraRepository;
+	
+	@Autowired
+	private AutorRepository autorRepository;
 
 	public List<Livro> findAll() {
 		return livroRepository.findAll();
@@ -35,6 +42,8 @@ public class LivroService {
 		Editora editora = livro.getEditora();
 
 		Area area = livro.getArea();
+		
+		Set<Autor> autores = livro.getAutores();
 
 		// Verifica editora
 		if (editora != null) {
@@ -75,6 +84,26 @@ public class LivroService {
 				livro.setArea(area);
 			}
 		}
+		
+		// Verifica Autores
+	    if (autores != null && !autores.isEmpty()) {
+	        Set<Autor> autoresToSave = new HashSet<>();
+	        for (Autor autor : autores) {
+	            if (autor.getNome() != null) {
+	                Autor existingAutor = autorRepository.findByNome(autor.getNome());
+	                if (existingAutor != null) {
+	                    autoresToSave.add(existingAutor);
+	                } else {
+	                    autor = autorRepository.save(autor);
+	                    autoresToSave.add(autor);
+	                }
+	            } else {
+	                autor = autorRepository.save(autor);
+	                autoresToSave.add(autor);
+	            }
+	        }
+	        livro.setAutores(autoresToSave);
+	    }
 
 		return livroRepository.save(livro);
 	}

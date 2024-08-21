@@ -1,6 +1,8 @@
 package com.biblioteca.entities;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -8,6 +10,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -32,6 +36,14 @@ public class Livro {
 	@ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "area_id", nullable = false)
 	private Area area;
+	
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+        name = "livro_autor",
+        joinColumns = @JoinColumn(name = "livro_id"),
+        inverseJoinColumns = @JoinColumn(name = "autor_id")
+    )
+    private Set<Autor> autores = new HashSet<>();
 	
 	private String codigo;
 	
@@ -108,6 +120,14 @@ public class Livro {
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
+	
+	public Set<Autor> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(Set<Autor> autores) {
+        this.autores = autores;
+    }
 
 	@Override
 	public int hashCode() {
