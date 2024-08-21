@@ -34,13 +34,13 @@ public class EmprestimoController {
 		return emprestimoService.findById(id);
 	}
 
-	/*
+	
 	@PostMapping
 	public Emprestimo createEmprestimo(@RequestBody Emprestimo emprestimo) throws Exception {
 		return emprestimoService.save(emprestimo);
-	}*/
+	}
 
-	/*
+	
 	@PutMapping("/{id}")
 	public ResponseEntity<Emprestimo> updateEmprestimo(@PathVariable Integer id,
 			@RequestBody Emprestimo emprestimoDetails) throws Exception {
@@ -59,7 +59,7 @@ public class EmprestimoController {
 		emprestimo.setUsuario(emprestimoDetails.getUsuario());
 
 		return ResponseEntity.ok(emprestimoService.save(emprestimo));
-	}*/
+	}
 
 	@DeleteMapping("/id/{id}")
 	public ResponseEntity<Void> deleteEmprestimoById(@PathVariable Integer id) {

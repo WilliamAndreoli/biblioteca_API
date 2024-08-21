@@ -2,6 +2,7 @@ package com.biblioteca.entities;
 
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,7 +29,7 @@ public class Livro {
     @JoinColumn(name = "editora_id", nullable = false)
 	private Editora editora;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "area_id", nullable = false)
 	private Area area;
 	

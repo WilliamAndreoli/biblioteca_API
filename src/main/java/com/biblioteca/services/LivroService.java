@@ -39,9 +39,9 @@ public class LivroService {
 		// Verifica editora
 		if (editora != null) {
 
-			if (editora.getId() != null) {
+			if (editora.getNome() != null) {
 				// Verifica se a Editora existe em banco
-				Editora existingEditora = editoraRepository.findById(editora.getId()).orElse(null);
+				Editora existingEditora = editoraRepository.findByNome(editora.getNome());
 
 				if (existingEditora != null) {
 					livro.setEditora(existingEditora);
@@ -59,9 +59,9 @@ public class LivroService {
 		// Verifica Area
 		if (area != null) {
 
-			if (area.getId() != null) {
+			if (area.getDescricao() != null) {
 				// Verifica se a Editora existe em banco
-				Area existingArea = areaRepository.findById(area.getId()).orElse(null);
+				Area existingArea = areaRepository.findByDescricao(area.getDescricao());
 
 				if (existingArea != null) {
 					livro.setArea(existingArea);
@@ -86,6 +86,10 @@ public class LivroService {
 
 	public Optional<Livro> findById(Integer id) {
 		return livroRepository.findById(id);
+	}
+	
+	public Livro findByTitulo(String titulo) {
+		return livroRepository.findByTitulo(titulo);
 	}
 
 }

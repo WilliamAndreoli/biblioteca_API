@@ -6,4 +6,6 @@ import com.biblioteca.entities.Livro;
 
 public interface LivroRepository extends JpaRepository<Livro, Integer> {
 
+	Livro findByTitulo(String titulo);
+	
 }
