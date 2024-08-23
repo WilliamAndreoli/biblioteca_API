@@ -11,6 +11,7 @@ import com.biblioteca.entities.Livro;
 import com.biblioteca.entities.Usuario;
 import com.biblioteca.repositories.EmprestimoRepository;
 import com.biblioteca.repositories.LivroRepository;
+import com.biblioteca.repositories.Tipo_UsuarioRepository;
 import com.biblioteca.repositories.UsuarioRepository;
 
 import jakarta.transaction.Transactional;
@@ -26,9 +27,14 @@ public class EmprestimoService {
 
 	@Autowired
 	private LivroRepository livroRepository;
+	
+	@Autowired
+	private Tipo_UsuarioRepository tipo_UsuarioRepository;
 
 	public List<Emprestimo> findAll() {
-		return emprestimoRepository.findAll();
+		List<Emprestimo> emprestimos = emprestimoRepository.findAll();
+        emprestimos.forEach(Emprestimo::calcularMulta);
+        return emprestimos;
 	}
 
 	public Emprestimo save(Emprestimo emprestimo) throws Exception {
@@ -63,9 +69,10 @@ public class EmprestimoService {
 			}
 
 		}
-
+		emprestimo.calcularMulta();
 		return emprestimoRepository.save(emprestimo);
 	}
+	
 
 	@Transactional
 	public void deleteById(Integer id) {

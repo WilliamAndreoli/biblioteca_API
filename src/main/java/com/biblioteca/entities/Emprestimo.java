@@ -2,6 +2,9 @@ package com.biblioteca.entities;
 
 import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +34,7 @@ public class Emprestimo {
 	
 	@ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
+	 @JsonIgnoreProperties({"senha", "email", "nome"}) // ou outras propriedades que você não quer atualizar
 	private Usuario usuario;
 
 	public Integer getId() {
@@ -66,6 +70,7 @@ public class Emprestimo {
 	}
 
 	public Double getMulta() {
+		calcularMulta();
 		return multa;
 	}
 
@@ -88,6 +93,38 @@ public class Emprestimo {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+	
+	public void calcularMulta() {
+        if (data_entrega != null && data_entrega.after(data_previsao)) {
+            long diffInMillies = Math.abs(data_entrega.getTime() - data_previsao.getTime());
+            long diasAtraso = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+            
+           
+            // Obter a multa diária do tipo de usuário
+            Double multaDiaria = usuario.getTipo_usuario().getMulta_diaria();
+            
+            // Calcular a multa total
+            this.multa = diasAtraso * multaDiaria;
+        } else {
+            this.multa = 0.0;
+        }
+    }
+	
+	public Double calcularMultaAlteraEmprestimo(Date data_entrega, Date data_previsao, Tipo_Usuario tipoUsuario) {
+        if (data_entrega != null && data_entrega.after(data_previsao)) {
+            long diffInMillies = Math.abs(data_entrega.getTime() - data_previsao.getTime());
+            long diasAtraso = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+            
+           
+            // Obter a multa diária do tipo de usuário
+            Double multaDiaria = tipoUsuario.getMulta_diaria();
+            
+            // Calcular a multa total
+            return diasAtraso * multaDiaria;
+        } else {
+            return 0.0;
+        }
+    }
 
 	@Override
 	public int hashCode() {

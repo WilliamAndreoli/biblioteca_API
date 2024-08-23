@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Emprestimo;
+import com.biblioteca.entities.Tipo_Usuario;
+import com.biblioteca.entities.Usuario;
 import com.biblioteca.services.EmprestimoService;
+import com.biblioteca.services.Tipo_UsuarioService;
+import com.biblioteca.services.UsuarioService;
 
 @RestController
 @RequestMapping("/emprestimos")
@@ -23,6 +27,12 @@ public class EmprestimoController {
 
 	@Autowired
 	private EmprestimoService emprestimoService;
+	
+	@Autowired
+	private UsuarioService usuarioService;
+	
+	@Autowired
+	private Tipo_UsuarioService tipo_UsuarioService;
 
 	@GetMapping
 	public List<Emprestimo> getAllEmprestimos() {
@@ -50,16 +60,22 @@ public class EmprestimoController {
 			return ResponseEntity.notFound().build();
 		}
 
+		Usuario usuario = emprestimoDetails.getUsuario();
+		
+		Tipo_Usuario tipoUsuario = tipo_UsuarioService.findByDescricao(usuario.getTipo_usuario().getDescricao());
+		
 		Emprestimo emprestimo = optionalEmprestimo.get();
 		emprestimo.setData_emprestimo(emprestimoDetails.getData_emprestimo());
 		emprestimo.setData_entrega(emprestimoDetails.getData_entrega());
 		emprestimo.setData_previsao(emprestimoDetails.getData_previsao());
 		emprestimo.setLivro(emprestimoDetails.getLivro());
-		emprestimo.setMulta(emprestimoDetails.getMulta());
+		emprestimo.setMulta(emprestimoDetails.calcularMultaAlteraEmprestimo(emprestimoDetails.getData_entrega(), 
+				emprestimoDetails.getData_previsao(), tipoUsuario));
 		emprestimo.setUsuario(emprestimoDetails.getUsuario());
 
 		return ResponseEntity.ok(emprestimoService.save(emprestimo));
 	}
+	
 
 	@DeleteMapping("/id/{id}")
 	public ResponseEntity<Void> deleteEmprestimoById(@PathVariable Integer id) {
