@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Emprestimo;
-import com.biblioteca.entities.Tipo_Usuario;
-import com.biblioteca.entities.Usuario;
+import com.biblioteca.entities.Livro;
 import com.biblioteca.services.EmprestimoService;
 import com.biblioteca.services.Tipo_UsuarioService;
 import com.biblioteca.services.UsuarioService;
@@ -61,11 +60,14 @@ public class EmprestimoController {
 			return ResponseEntity.notFound().build();
 		}
 
-		Usuario usuario = emprestimoDetails.getUsuario();
+		//Usuario usuario = emprestimoDetails.getUsuario();
 		
-		Tipo_Usuario tipoUsuario = tipo_UsuarioService.findByDescricao(usuario.getTipo_usuario().getDescricao());
+		//Tipo_Usuario tipoUsuario = tipo_UsuarioService.findByDescricao(usuario.getTipo_usuario().getDescricao());
 		
 		Emprestimo emprestimo = optionalEmprestimo.get();
+		emprestimo.setData_entrega(emprestimoDetails.getData_entrega());
+		
+		/*
 		emprestimo.setData_emprestimo(emprestimoDetails.getData_emprestimo());
 		emprestimo.setData_entrega(emprestimoDetails.getData_entrega());
 		emprestimo.setData_previsao(emprestimoDetails.getData_previsao());
@@ -73,8 +75,9 @@ public class EmprestimoController {
 		emprestimo.setMulta(emprestimoDetails.calcularMultaAlteraEmprestimo(emprestimoDetails.getData_entrega(), 
 				emprestimoDetails.getData_previsao(), tipoUsuario));
 		emprestimo.setUsuario(emprestimoDetails.getUsuario());
-
-		return ResponseEntity.ok(emprestimoService.save(emprestimo));
+*/
+		//return ResponseEntity.ok(emprestimoService.save(emprestimo));
+		return ResponseEntity.ok(emprestimoService.devolucaoLivro(emprestimo));
 	}
 	
 

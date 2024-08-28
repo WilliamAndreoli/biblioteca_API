@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
@@ -76,6 +77,21 @@ public class EmprestimoService {
 		}
 		emprestimo.calcularMulta();
 		return emprestimoRepository.save(emprestimo);
+	}
+	
+	@PostMapping
+	public Emprestimo devolucaoLivro(Emprestimo emprestimo) {
+		
+		Livro livro = emprestimo.getLivro();
+		
+		if (livro.getQuantidadeDisponivel() >= 0 && livro.getQuantidadeDisponivel() < livro.getQuantidade()) {
+			livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + 1);
+			livroRepository.save(livro);
+		}
+		
+		emprestimo.calcularMulta();
+		return emprestimoRepository.save(emprestimo);
+		
 	}
 	
 
