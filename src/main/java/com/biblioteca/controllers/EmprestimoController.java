@@ -51,7 +51,7 @@ public class EmprestimoController {
 	}
 
 	
-	@PutMapping("/{id}")
+	@PutMapping("/devolucao/{id}")
 	public ResponseEntity<Emprestimo> updateEmprestimo(@PathVariable Integer id,
 			@RequestBody Emprestimo emprestimoDetails) throws Exception {
 		Optional<Emprestimo> optionalEmprestimo = emprestimoService.findById(id);

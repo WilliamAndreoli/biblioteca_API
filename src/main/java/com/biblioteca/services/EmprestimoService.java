@@ -79,7 +79,6 @@ public class EmprestimoService {
 		return emprestimoRepository.save(emprestimo);
 	}
 	
-	@PostMapping
 	public Emprestimo devolucaoLivro(Emprestimo emprestimo) {
 		
 		Livro livro = emprestimo.getLivro();
