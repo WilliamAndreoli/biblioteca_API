@@ -28,14 +28,14 @@ public class EmprestimoService {
 
 	@Autowired
 	private LivroRepository livroRepository;
-	
+
 	@Autowired
 	private Tipo_UsuarioRepository tipo_UsuarioRepository;
 
 	public List<Emprestimo> findAll() {
 		List<Emprestimo> emprestimos = emprestimoRepository.findAll();
-        emprestimos.forEach(Emprestimo::calcularMulta);
-        return emprestimos;
+		emprestimos.forEach(Emprestimo::calcularMulta);
+		return emprestimos;
 	}
 
 	public Emprestimo save(Emprestimo emprestimo) throws Exception {
@@ -53,46 +53,50 @@ public class EmprestimoService {
 					emprestimo.setUsuario(existingUsuario);
 				}
 			} else {
-				throw new RuntimeException("Usuario inexistente");
+				throw new RuntimeException("Usuario inexistente.");
 			}
 		}
 
 		if (livro != null) {
 
-			if (livro.getTitulo() != null) {
-				Livro existingLivro = livroRepository.findByTitulo(livro.getTitulo());
-				if (existingLivro != null) {
-					
+			if (livro.getId() != null) {
+				Optional<Livro> optionalLivro = livroRepository.findById(livro.getId());
+
+				if (optionalLivro.get() != null) {
+
+					Livro existingLivro = optionalLivro.get();
+
 					if (existingLivro.getQuantidadeDisponivel() > 0) {
 						existingLivro.setQuantidadeDisponivel(existingLivro.getQuantidadeDisponivel() - 1);
 						livroRepository.save(existingLivro);
 						emprestimo.setLivro(existingLivro);
+					} else {
+						throw new RuntimeException("Livro indisponível para empréstimo.");
 					}
 				}
 
 			} else {
-				throw new RuntimeException("Livro indisponível para empréstimo.");
+				throw new RuntimeException("Livro inexistente.");
 			}
 
 		}
 		emprestimo.calcularMulta();
 		return emprestimoRepository.save(emprestimo);
 	}
-	
+
 	public Emprestimo devolucaoLivro(Emprestimo emprestimo) {
-		
+
 		Livro livro = emprestimo.getLivro();
-		
+
 		if (livro.getQuantidadeDisponivel() >= 0 && livro.getQuantidadeDisponivel() < livro.getQuantidade()) {
 			livro.setQuantidadeDisponivel(livro.getQuantidadeDisponivel() + 1);
 			livroRepository.save(livro);
 		}
-		
+
 		emprestimo.calcularMulta();
 		return emprestimoRepository.save(emprestimo);
-		
+
 	}
-	
 
 	@Transactional
 	public void deleteById(Integer id) {

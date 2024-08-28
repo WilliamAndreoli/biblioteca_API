@@ -59,24 +59,10 @@ public class EmprestimoController {
 		if (!optionalEmprestimo.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-
-		//Usuario usuario = emprestimoDetails.getUsuario();
-		
-		//Tipo_Usuario tipoUsuario = tipo_UsuarioService.findByDescricao(usuario.getTipo_usuario().getDescricao());
 		
 		Emprestimo emprestimo = optionalEmprestimo.get();
 		emprestimo.setData_entrega(emprestimoDetails.getData_entrega());
 		
-		/*
-		emprestimo.setData_emprestimo(emprestimoDetails.getData_emprestimo());
-		emprestimo.setData_entrega(emprestimoDetails.getData_entrega());
-		emprestimo.setData_previsao(emprestimoDetails.getData_previsao());
-		emprestimo.setLivro(emprestimoDetails.getLivro());
-		emprestimo.setMulta(emprestimoDetails.calcularMultaAlteraEmprestimo(emprestimoDetails.getData_entrega(), 
-				emprestimoDetails.getData_previsao(), tipoUsuario));
-		emprestimo.setUsuario(emprestimoDetails.getUsuario());
-*/
-		//return ResponseEntity.ok(emprestimoService.save(emprestimo));
 		return ResponseEntity.ok(emprestimoService.devolucaoLivro(emprestimo));
 	}
 	
