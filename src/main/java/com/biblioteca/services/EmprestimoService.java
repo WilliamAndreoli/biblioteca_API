@@ -52,7 +52,7 @@ public class EmprestimoService {
 					emprestimo.setUsuario(existingUsuario);
 				}
 			} else {
-				throw new Exception("Usuario inexistente");
+				throw new RuntimeException("Usuario inexistente");
 			}
 		}
 
@@ -61,11 +61,16 @@ public class EmprestimoService {
 			if (livro.getTitulo() != null) {
 				Livro existingLivro = livroRepository.findByTitulo(livro.getTitulo());
 				if (existingLivro != null) {
-					emprestimo.setLivro(existingLivro);
+					
+					if (existingLivro.getQuantidadeDisponivel() > 0) {
+						existingLivro.setQuantidadeDisponivel(existingLivro.getQuantidadeDisponivel() - 1);
+						livroRepository.save(existingLivro);
+						emprestimo.setLivro(existingLivro);
+					}
 				}
 
 			} else {
-				throw new Exception("Livro inexistente");
+				throw new RuntimeException("Livro indisponível para empréstimo.");
 			}
 
 		}

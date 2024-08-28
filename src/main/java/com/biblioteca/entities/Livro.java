@@ -49,6 +49,8 @@ public class Livro {
 	
 	private Integer quantidade;
 
+	private Integer quantidadeDisponivel;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -121,6 +123,14 @@ public class Livro {
 		this.quantidade = quantidade;
 	}
 	
+	public Integer getQuantidadeDisponivel() {
+		return quantidadeDisponivel;
+	}
+
+	public void setQuantidadeDisponivel(Integer quantidadeDisponivel) {
+		this.quantidadeDisponivel = quantidadeDisponivel;
+	}
+
 	public Set<Autor> getAutores() {
         return autores;
     }

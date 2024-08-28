@@ -46,8 +46,9 @@ public class EmprestimoController {
 
 	
 	@PostMapping
-	public Emprestimo createEmprestimo(@RequestBody Emprestimo emprestimo) throws Exception {
-		return emprestimoService.save(emprestimo);
+	public ResponseEntity<Emprestimo> createEmprestimo(@RequestBody Emprestimo emprestimo) throws Exception {
+		Emprestimo novoEmprestimo = emprestimoService.save(emprestimo);
+		return ResponseEntity.ok(novoEmprestimo);
 	}
 
 	
