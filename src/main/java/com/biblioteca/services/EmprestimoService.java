@@ -1,11 +1,12 @@
 package com.biblioteca.services;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
@@ -80,6 +81,15 @@ public class EmprestimoService {
 			}
 
 		}
+		
+		emprestimo.setData_emprestimo(new Date());
+		
+		// Calcula a data de previsão com base no tipo de usuário
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(emprestimo.getData_emprestimo());
+        cal.add(Calendar.DAY_OF_MONTH, emprestimo.getUsuario().getTipo_usuario().getDias_emprestimo());
+        emprestimo.setData_previsao(cal.getTime());
+		
 		emprestimo.calcularMulta();
 		return emprestimoRepository.save(emprestimo);
 	}
