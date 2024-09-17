@@ -8,13 +8,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Area {
+public class Tipo_Usuario {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	private Integer id;
 	
 	private String descricao;
+	
+	private Integer dias_emprestimo;
+	
+	private Double multa_diaria;
 	
 	public Integer getId() {
 		return id;
@@ -27,14 +31,30 @@ public class Area {
 	public String getDescricao() {
 		return descricao;
 	}
-	
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
+	public Integer getDias_emprestimo() {
+		return dias_emprestimo;
+	}
+	
+	public void setDias_emprestimo(Integer dias_emprestimo) {
+		this.dias_emprestimo = dias_emprestimo;
+	}
+	
+	public Double getMulta_diaria() {
+		return multa_diaria;
+	}
+	
+	public void setMulta_diaria(Double multa_diaria) {
+		this.multa_diaria = multa_diaria;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(descricao, id);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -45,11 +65,9 @@ public class Area {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Area other = (Area) obj;
-		return Objects.equals(descricao, other.descricao) && Objects.equals(id, other.id);
+		Tipo_Usuario other = (Tipo_Usuario) obj;
+		return Objects.equals(id, other.id);
 	}
-	
-	
 	
 	
 	
