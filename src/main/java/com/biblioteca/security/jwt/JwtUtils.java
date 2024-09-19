@@ -2,6 +2,7 @@ package com.biblioteca.security.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
@@ -30,6 +31,10 @@ public class JwtUtils {
     public String generateTokenFromUserDetailsImplementation(UserDetailsImpl userDetails) {
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
+                .claim("name", userDetails.getNome())
+                .claim("authorities", userDetails.getAuthorities().stream()
+                		.map(item -> item.getAuthority())
+                		.collect(Collectors.toList()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(getSigninKey(), SignatureAlgorithm.HS512) // Alterado para HS512

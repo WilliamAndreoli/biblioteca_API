@@ -11,13 +11,15 @@ public class UserDetailsImpl implements UserDetails{
 
 	private Integer id;
 	
-	private String name;
+	private String nome;
 	
 	private String userName;
 	
 	private String email;
 	
 	private String password;
+	
+	private Collection<? extends GrantedAuthority> authorities;
 	
 	public static UserDetailsImpl build(Usuario usuario) {
 	    return new UserDetailsImpl(
@@ -30,20 +32,16 @@ public class UserDetailsImpl implements UserDetails{
 	    );
 	}
 	
-	public UserDetailsImpl(Integer id, String name, String userName, String email, String password,
+	public UserDetailsImpl(Integer id, String nome, String userName, String email, String password,
 			Collection<? extends GrantedAuthority> authorities) {
 		super();
 		this.id = id;
-		this.name = name;
+		this.nome = nome;
 		this.userName = email;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
 	}
-
-
-
-	private Collection<? extends GrantedAuthority> authorities;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -60,6 +58,18 @@ public class UserDetailsImpl implements UserDetails{
 		return email;
 	}
 	
+	public Integer getId() {
+		return id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
