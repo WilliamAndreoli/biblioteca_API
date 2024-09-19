@@ -51,6 +51,8 @@ public class Livro {
 
 	private Integer quantidadeDisponivel;
 	
+	private String img;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -129,6 +131,14 @@ public class Livro {
 
 	public void setQuantidadeDisponivel(Integer quantidadeDisponivel) {
 		this.quantidadeDisponivel = quantidadeDisponivel;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	public Set<Autor> getAutores() {
