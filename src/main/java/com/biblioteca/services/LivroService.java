@@ -15,6 +15,7 @@ import com.biblioteca.entities.Livro;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
+import com.biblioteca.exceptions.LivroNotFoundException;
 import com.biblioteca.repositories.AreaRepository;
 import com.biblioteca.repositories.AutorRepository;
 import com.biblioteca.repositories.EditoraRepository;
@@ -115,8 +116,8 @@ public class LivroService {
 	}
 
 	@Transactional
-	public void deleteByTitulo(String titulo) {
-		livroRepository.deleteByTitulo(titulo);		
+	public void deleteByTitulo(String titulo) throws LivroNotFoundException {
+			livroRepository.deleteByTitulo(titulo);
 	}
 
 }

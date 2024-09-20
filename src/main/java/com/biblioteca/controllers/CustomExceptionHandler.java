@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
+import com.biblioteca.exceptions.LivroNotFoundException;
+import com.biblioteca.exceptions.UsuarioNotFoundException;
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -36,7 +38,25 @@ public class CustomExceptionHandler {
     @ExceptionHandler(AutorNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleAutorNotFound(AutorNotFoundException ex) {
     	Map<String, String> response = new HashMap<>();
-	    response.put("error", "Autor não encontrada");
+	    response.put("error", "Autor não encontrado");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(LivroNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleLivroNotFound(LivroNotFoundException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Livro não encontrado");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(UsuarioNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleUsuarioNotFound(UsuarioNotFoundException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Usuário não encontrado");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

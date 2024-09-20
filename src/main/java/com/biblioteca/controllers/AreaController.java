@@ -39,7 +39,7 @@ public class AreaController {
         return areaService.save(area);
     }
 	
-	@PutMapping("/{descricao}")
+	@PutMapping("descricao/{descricao}")
     public ResponseEntity<Area> updateArea(@PathVariable String descricao, @RequestBody Area areaDetails) {
         Area area = areaService.findByDescricao(descricao);
         if (area == null) {

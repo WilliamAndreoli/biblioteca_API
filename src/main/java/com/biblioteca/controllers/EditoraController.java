@@ -40,7 +40,7 @@ public class EditoraController {
         return editoraService.save(editora);
     }
 	
-	@PutMapping("/{id}")
+	@PutMapping("nome/{nome}")
     public ResponseEntity<Editora> updateEditora(@PathVariable String nome, @RequestBody Editora editoraDetails) {
         Editora editora = editoraService.findByNome(nome);
         if (editora == null) {

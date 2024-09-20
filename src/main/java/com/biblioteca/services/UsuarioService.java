@@ -39,10 +39,9 @@ public class UsuarioService {
         // Verificando se o Tipo_Usuario já existe
         Tipo_Usuario tipoUsuario = usuario.getTipo_usuario();
         if (tipoUsuario != null) { 
-        	if (tipoUsuario.getId() != null) {
+        	if (tipoUsuario.getDescricao() != null) {
         		// Buscar o Tipo_usuario existente
-        		Tipo_Usuario existingTipoUsuario = tipoUsuarioRepository.findById(tipoUsuario.getId())
-                        .orElse(null);
+        		Tipo_Usuario existingTipoUsuario = tipoUsuarioRepository.findByDescricao(tipoUsuario.getDescricao());
         		if (existingTipoUsuario != null) {
                     // Se o Tipo_Usuario existe, associe-o ao Usuario
                     usuario.setTipo_usuario(existingTipoUsuario);
@@ -52,9 +51,7 @@ public class UsuarioService {
                     usuario.setTipo_usuario(tipoUsuario);
                 }
         	} else {
-                // Se o id do Tipo_Usuario é nulo, salve o novo Tipo_Usuario
-                tipoUsuario = tipoUsuarioRepository.save(tipoUsuario);
-                usuario.setTipo_usuario(tipoUsuario);
+                throw new RuntimeException("Tipo Usuário nulo ou inexistente: " + tipoUsuario.getDescricao());
             }
         }
         
@@ -105,7 +102,8 @@ public class UsuarioService {
         usuario.setNome(usuarioDto.getNome());
         usuario.setEmail(usuarioDto.getEmail());
         usuario.setSenha(usuarioDto.getSenha());
-        
+        usuario.setTipo_usuario(tipoUsuarioRepository.findByDescricao(usuarioDto.getTipoUsuario().getDescricao()));
+        /*
         if (usuarioDto.getTipoUsuario() != null) {
         	Tipo_Usuario tipoUsuario = new Tipo_Usuario();
         	tipoUsuario.setId(usuarioDto.getTipoUsuario().getId());
@@ -115,7 +113,7 @@ public class UsuarioService {
             usuario.setTipo_usuario(tipoUsuario);
         } else {
         	throw new IllegalArgumentException("Tipo de usuário não pode ser nulo");
-        }
+        }*/
 
         return usuario;
     }

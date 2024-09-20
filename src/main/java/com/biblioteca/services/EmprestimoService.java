@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
 import com.biblioteca.entities.Usuario;
+import com.biblioteca.exceptions.UsuarioNotFoundException;
 import com.biblioteca.repositories.EmprestimoRepository;
 import com.biblioteca.repositories.LivroRepository;
 import com.biblioteca.repositories.Tipo_UsuarioRepository;
@@ -48,20 +49,20 @@ public class EmprestimoService {
 			if (usuario.getId() != null) {
 				// Buscar o Usuario existente
 				Usuario existingUsuario = usuarioRepository.findById(usuario.getId()).orElse(null);
-
+				
 				if (existingUsuario != null) {
 					// Se o Usuario existe, associe-o ao Emprestimo
 					emprestimo.setUsuario(existingUsuario);
 				}
 			} else {
-				throw new RuntimeException("Usuario inexistente.");
+				throw new UsuarioNotFoundException("Usuario inexistente.");
 			}
 		}
 
 		if (livro != null) {
 
-			if (livro.getId() != null) {
-				Optional<Livro> optionalLivro = livroRepository.findById(livro.getId());
+			if (livro.getTitulo() != null) {
+				Optional<Livro> optionalLivro = livroRepository.findByTitulo(livro.getTitulo());
 
 				if (optionalLivro.get() != null) {
 

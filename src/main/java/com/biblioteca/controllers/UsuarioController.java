@@ -61,7 +61,7 @@ public class UsuarioController {
         return ResponseEntity.ok(savedUsuario);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("id/{id}")
     public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO usuario = usuarioService.findById(id);
         if (usuario == null) {

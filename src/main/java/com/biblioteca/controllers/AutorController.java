@@ -40,7 +40,7 @@ public class AutorController {
         return autorService.save(autor);
     }
 	
-	@PutMapping("/{nome}")
+	@PutMapping("nome/{nome}")
     public ResponseEntity<Autor> updateAutor(@PathVariable String nome, @RequestBody Editora editoraDetails) {
         Autor autor = autorService.findByNome(nome);
         if (autor == null) {
