@@ -11,7 +11,7 @@ public class UsuarioDTO {
     private String email;
     private String senha;
     @JsonFormat
-    private Status status;
+    private Status status = Status.ATIVO;
     private Tipo_Usuario tipoUsuario;
 
     // Construtores

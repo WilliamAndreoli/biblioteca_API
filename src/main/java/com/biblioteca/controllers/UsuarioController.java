@@ -58,7 +58,11 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO savedUsuario = usuarioService.save(usuarioDTO);
+        if(usuarioDTO.getStatus() == null) {
+        	usuarioDTO.setStatus(Status.ATIVO);
+        }
+    	
+    	UsuarioDTO savedUsuario = usuarioService.save(usuarioDTO);
         return ResponseEntity.ok(savedUsuario);
     }
 

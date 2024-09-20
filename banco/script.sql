@@ -3,18 +3,21 @@ CREATE DATABASE IF NOT EXISTS Biblioteca;
 CREATE TABLE editora (
 id int auto_increment not null primary key,
 nome varchar(100) not null,
-endereco varchar(45)
+endereco varchar(45),
+status varchar(45) default "ATIVO"
 );
 
 CREATE TABLE area (
 id int auto_increment not null primary key,
-descricao varchar(100) not null
+descricao varchar(100) not null,
+status varchar(45) default "ATIVO"
 );
 
 CREATE TABLE autor (
 id int auto_increment not null primary key,
 nome varchar(100) not null,
-endereco varchar(45)
+endereco varchar(45),
+status varchar(45) default "ATIVO"
 );
 
 CREATE TABLE tipo_usuario (
@@ -30,7 +33,7 @@ CREATE TABLE usuario (
 	email varchar(100) not null,
 	senha varchar(32) not null,
 	tipo_usuario_id int,
-    status varchar(45),
+    status varchar(45) default 'ATIVO',
     FOREIGN KEY (tipo_usuario_id) REFERENCES tipo_usuario(id)
 );
 
@@ -46,6 +49,7 @@ CREATE TABLE livro (
     img varchar(100),
     editora_id int,
     area_id int,
+    status varchar(45) default "ATIVO",
     foreign key (editora_id) references editora(id),
     foreign key (area_id) references area(id)
 );
@@ -66,6 +70,7 @@ CREATE TABLE emprestimo (
     multa float,
     livro_id int not null,
     usuario_id int not null,
+    status varchar(45) default "ATIVO",
     foreign key (livro_id) references livro(id),
     foreign key (usuario_id) references usuario(id)
 );
