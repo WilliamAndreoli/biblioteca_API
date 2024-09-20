@@ -110,8 +110,13 @@ public class LivroService {
 		return livroRepository.findById(id);
 	}
 
-	public Livro findByTitulo(String titulo) {
+	public Optional<Livro> findByTitulo(String titulo) {
 		return livroRepository.findByTitulo(titulo);
+	}
+
+	@Transactional
+	public void deleteByTitulo(String titulo) {
+		livroRepository.deleteByTitulo(titulo);		
 	}
 
 }

@@ -29,9 +29,9 @@ public class LivroController {
 		return livroService.findAll();
 	}
 
-	@GetMapping("/id/{id}")
-	public Optional<Livro> getLivroById(@PathVariable Integer id) {
-		return livroService.findById(id);
+	@GetMapping("/titulo/{titulo}")
+	public Optional<Livro> getLivroById(@PathVariable String titulo) {
+		return livroService.findByTitulo(titulo);
 	}
 
 	
@@ -40,10 +40,10 @@ public class LivroController {
 		return livroService.save(livro);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Livro> updateLivro(@PathVariable Integer id,
+	@PutMapping("/titulo/{titulo}")
+	public ResponseEntity<Livro> updateLivro(@PathVariable String titulo,
 			@RequestBody Livro livroDetails) {
-		Optional<Livro> optionalLivro = livroService.findById(id);
+		Optional<Livro> optionalLivro = livroService.findByTitulo(titulo);
 
 		if (!optionalLivro.isPresent()) {
 			return ResponseEntity.notFound().build();
@@ -62,15 +62,15 @@ public class LivroController {
 		return ResponseEntity.ok(livroService.save(livro));
 	}
 
-	@DeleteMapping("/id/{id}")
-	public ResponseEntity<Void> deleteLivroById(@PathVariable Integer id) {
-		Optional<Livro> optionalLivro = livroService.findById(id);
+	@DeleteMapping("/titulo/{titulo}")
+	public ResponseEntity<Void> deleteLivroById(@PathVariable String titulo) {
+		Optional<Livro> optionalLivro = livroService.findByTitulo(titulo);
 
 		if (!optionalLivro.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		livroService.deleteById(id);
+		livroService.deleteByTitulo(titulo);
 		return ResponseEntity.noContent().build();
 	}
 	
