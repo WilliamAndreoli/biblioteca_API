@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.dto.UsuarioDTO;
+import com.biblioteca.entities.Status;
 import com.biblioteca.entities.Tipo_Usuario;
 import com.biblioteca.entities.Usuario;
 import com.biblioteca.repositories.Tipo_UsuarioRepository;
@@ -37,18 +38,18 @@ public class UsuarioService {
         Usuario usuario = convertToEntity(usuarioDto);
         
         // Verificando se o Tipo_Usuario já existe
-        Tipo_Usuario tipoUsuario = usuario.getTipo_usuario();
+        Tipo_Usuario tipoUsuario = usuario.getTipo_Usuario();
         if (tipoUsuario != null) { 
         	if (tipoUsuario.getDescricao() != null) {
         		// Buscar o Tipo_usuario existente
         		Tipo_Usuario existingTipoUsuario = tipoUsuarioRepository.findByDescricao(tipoUsuario.getDescricao());
         		if (existingTipoUsuario != null) {
                     // Se o Tipo_Usuario existe, associe-o ao Usuario
-                    usuario.setTipo_usuario(existingTipoUsuario);
+                    usuario.setTipo_Usuario(existingTipoUsuario);
                 } else {
                     // Se o Tipo_Usuario não existe, salve o novo Tipo_Usuario
                     tipoUsuario = tipoUsuarioRepository.save(tipoUsuario);
-                    usuario.setTipo_usuario(tipoUsuario);
+                    usuario.setTipo_Usuario(tipoUsuario);
                 }
         	} else {
                 throw new RuntimeException("Tipo Usuário nulo ou inexistente: " + tipoUsuario.getDescricao());
@@ -89,6 +90,16 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
         return usuario != null ? convertToDto(usuario) : null;
     }
+    
+    public UsuarioDTO alteraStatus(Status status, String email) {
+    	Usuario usuario = usuarioRepository.findByEmail(email);
+    	
+    	usuario.setStatus(status);
+    	
+    	Usuario savedUsuario = usuarioRepository.save(usuario);
+    	return convertToDto(savedUsuario);
+    	
+    }
 
     // Métodos auxiliares para conversão
     private UsuarioDTO convertToDto(Usuario usuario) {
@@ -97,7 +108,8 @@ public class UsuarioService {
             usuario.getNome(),
             usuario.getEmail(),
             usuario.getSenha(),
-            usuario.getTipo_usuario()
+            usuario.getStatus(),
+            usuario.getTipo_Usuario()
         );
     }
 
@@ -107,7 +119,8 @@ public class UsuarioService {
         usuario.setNome(usuarioDto.getNome());
         usuario.setEmail(usuarioDto.getEmail());
         usuario.setSenha(usuarioDto.getSenha());
-        usuario.setTipo_usuario(tipoUsuarioRepository.findByDescricao(usuarioDto.getTipoUsuario().getDescricao()));
+        usuario.setStatus(usuarioDto.getStatus());
+        usuario.setTipo_Usuario(tipoUsuarioRepository.findByDescricao(usuarioDto.getTipoUsuario().getDescricao()));
         /*
         if (usuarioDto.getTipoUsuario() != null) {
         	Tipo_Usuario tipoUsuario = new Tipo_Usuario();

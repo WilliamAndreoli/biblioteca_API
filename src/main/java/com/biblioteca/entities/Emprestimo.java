@@ -101,7 +101,7 @@ public class Emprestimo {
             
            
             // Obter a multa diária do tipo de usuário
-            Double multaDiaria = usuario.getTipo_usuario().getMulta_diaria();
+            Double multaDiaria = usuario.getTipo_Usuario().getMulta_diaria();
             
             // Calcular a multa total
             this.multa = diasAtraso * multaDiaria;

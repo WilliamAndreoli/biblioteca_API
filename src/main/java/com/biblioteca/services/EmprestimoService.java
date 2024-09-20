@@ -88,7 +88,7 @@ public class EmprestimoService {
 		// Calcula a data de previsão com base no tipo de usuário
         Calendar cal = Calendar.getInstance();
         cal.setTime(emprestimo.getData_emprestimo());
-        cal.add(Calendar.DAY_OF_MONTH, emprestimo.getUsuario().getTipo_usuario().getDias_emprestimo());
+        cal.add(Calendar.DAY_OF_MONTH, emprestimo.getUsuario().getTipo_Usuario().getDias_emprestimo());
         emprestimo.setData_previsao(cal.getTime());
 		
 		emprestimo.calcularMulta();

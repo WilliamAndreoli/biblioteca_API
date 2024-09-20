@@ -8,12 +8,12 @@ endereco varchar(45)
 
 CREATE TABLE area (
 id int auto_increment not null primary key,
-descricao varchar(100)
+descricao varchar(100) not null
 );
 
 CREATE TABLE autor (
 id int auto_increment not null primary key,
-nome varchar(100),
+nome varchar(100) not null,
 endereco varchar(45)
 );
 
@@ -30,6 +30,7 @@ CREATE TABLE usuario (
 	email varchar(100) not null,
 	senha varchar(32) not null,
 	tipo_usuario_id int,
+    status varchar(45),
     FOREIGN KEY (tipo_usuario_id) REFERENCES tipo_usuario(id)
 );
 
@@ -40,7 +41,7 @@ CREATE TABLE livro (
     resumo varchar(5000),
 	ano_publicacao int,
     codigo varchar(45),
-    quantidade int,
+    quantidade int not null,
     quantidade_disponivel int,
     img varchar(100),
     editora_id int,
@@ -63,8 +64,8 @@ CREATE TABLE emprestimo (
     data_previsao date not null,
     data_entrega date,
     multa float,
-    livro_id int,
-    usuario_id int,
+    livro_id int not null,
+    usuario_id int not null,
     foreign key (livro_id) references livro(id),
     foreign key (usuario_id) references usuario(id)
 );
@@ -104,6 +105,6 @@ values
 	("PROFESSOR", 7, 2.50),
     ("ALUNO", 15, 3.50);
 
-INSERT INTO usuario (nome, email, senha, tipo_usuario_id) values 
-	("Aluno 1", "aluno@teste.com", "12345", 2);
+INSERT INTO usuario (nome, email, senha, status, tipo_usuario_id) values 
+	("Aluno 1", "aluno@teste.com", "12345", "ATIVO" , 2);
 

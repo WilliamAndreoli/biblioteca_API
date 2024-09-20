@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.converters.UsuarioDTOConverter;
 import com.biblioteca.dto.UsuarioDTO;
+import com.biblioteca.entities.Status;
 import com.biblioteca.services.UsuarioService;
 
 @RestController
@@ -72,6 +73,19 @@ public class UsuarioController {
         usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
         UsuarioDTO updatedUsuario = usuarioService.save(usuario);
+        return ResponseEntity.ok(updatedUsuario);
+    }
+    
+    @PutMapping("status/{email}")
+    public ResponseEntity<UsuarioDTO> alteraStatus(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
+    	UsuarioDTO usuario = usuarioService.findByEmail(email);
+    	if (usuario == null) {
+            return ResponseEntity.notFound().build();
+        }
+    	
+    	usuario.setStatus(usuarioDTO.getStatus());
+    	
+        UsuarioDTO updatedUsuario = usuarioService.alteraStatus(usuario.getStatus(), email);
         return ResponseEntity.ok(updatedUsuario);
     }
 
