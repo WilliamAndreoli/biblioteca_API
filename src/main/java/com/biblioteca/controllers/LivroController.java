@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Livro;
+import com.biblioteca.entities.Livro;
 import com.biblioteca.services.LivroService;
 
 @RestController
@@ -59,6 +60,22 @@ public class LivroController {
 		livro.setArea(livroDetails.getArea());
 		livro.setAno_publicacao(livroDetails.getAno_publicacao());
 
+		return ResponseEntity.ok(livroService.save(livro));
+	}
+	
+	@PutMapping("status/{titulo}")
+	public ResponseEntity<Livro> alteraStatus(@PathVariable String titulo, @RequestBody Livro livroDetails) throws Exception {
+		Optional<Livro> optionalLivro = livroService.findByTitulo(titulo);
+
+		if (!optionalLivro.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		Livro livro = optionalLivro.get();
+		
+		livro.setStatus(livroDetails.getStatus());
+		
+		Livro updatedLivro = livroService.alteraStatus(livro.getStatus(), titulo);
 		return ResponseEntity.ok(livroService.save(livro));
 	}
 

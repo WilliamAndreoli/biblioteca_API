@@ -7,6 +7,8 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +24,9 @@ public class Autor {
 	private String nome;
 
 	private String endereco;
+	
+	@Enumerated(EnumType.STRING)
+	private Status status = Status.ATIVO;
 
 	@ManyToMany(mappedBy = "autores")
 	@JsonIgnore
@@ -49,6 +54,14 @@ public class Autor {
 
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public Set<Livro> getLivros() {

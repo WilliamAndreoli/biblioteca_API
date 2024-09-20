@@ -6,6 +6,8 @@ import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -52,6 +54,9 @@ public class Livro {
 	private Integer quantidadeDisponivel;
 	
 	private String img;
+	
+	@Enumerated(EnumType.STRING)
+	private Status status = Status.ATIVO;
 	
 	public Integer getId() {
 		return id;
@@ -139,6 +144,14 @@ public class Livro {
 
 	public void setImg(String img) {
 		this.img = img;
+	}
+	
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public Set<Autor> getAutores() {

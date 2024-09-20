@@ -7,6 +7,8 @@ import java.util.concurrent.TimeUnit;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,6 +29,9 @@ public class Emprestimo {
 	private Date data_entrega;
 	
 	private Double multa;
+	
+	@Enumerated(EnumType.STRING)
+	private Status status = Status.ATIVO;
 	
 	@ManyToOne
     @JoinColumn(name = "livro_id", nullable = false)
@@ -76,6 +81,14 @@ public class Emprestimo {
 
 	public void setMulta(Double multa) {
 		this.multa = multa;
+	}
+	
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	public Livro getLivro() {

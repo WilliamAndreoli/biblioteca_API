@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Autor;
-import com.biblioteca.entities.Editora;
 import com.biblioteca.services.AutorService;
 
 @RestController
@@ -41,15 +40,28 @@ public class AutorController {
     }
 	
 	@PutMapping("nome/{nome}")
-    public ResponseEntity<Autor> updateAutor(@PathVariable String nome, @RequestBody Editora editoraDetails) {
+    public ResponseEntity<Autor> updateAutor(@PathVariable String nome, @RequestBody Autor autorDetails) {
         Autor autor = autorService.findByNome(nome);
         if (autor == null) {
             return ResponseEntity.notFound().build();
         }
-        autor.setNome(editoraDetails.getNome());
-        autor.setEndereco(editoraDetails.getEndereco());
+        autor.setNome(autorDetails.getNome());
+        autor.setEndereco(autorDetails.getEndereco());
         return ResponseEntity.ok(autorService.save(autor));
     }
+	
+	@PutMapping("status/{nome}")
+	public ResponseEntity<Autor> alteraStatus(@PathVariable String nome, @RequestBody Autor autorDetails) {
+		Autor autor = autorService.findByNome(nome);
+		if (autor == null) {
+            return ResponseEntity.notFound().build();
+        }
+		
+		autor.setStatus(autorDetails.getStatus());
+		
+		Autor updatedAutor = autorService.alteraStatus(autor.getStatus(), nome);
+		return ResponseEntity.ok(autorService.save(autor));
+	}
 	
 	@DeleteMapping("/nome/{nome}")
     public ResponseEntity<Void> deleteAutorByNome(@PathVariable String nome) {

@@ -12,6 +12,8 @@ import com.biblioteca.entities.Area;
 import com.biblioteca.entities.Autor;
 import com.biblioteca.entities.Editora;
 import com.biblioteca.entities.Livro;
+import com.biblioteca.entities.Livro;
+import com.biblioteca.entities.Status;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
@@ -100,6 +102,18 @@ public class LivroService {
 	    }
 
 		return livroRepository.save(livro);
+	}
+	
+	public Livro alteraStatus(Status status, String titulo) {
+		Optional<Livro> livro = livroRepository.findByTitulo(titulo);
+		
+		Livro existingLivro = livro.get();
+		
+		existingLivro.setStatus(status);
+		
+		Livro savedLivro = livroRepository.save(existingLivro);
+		
+		return savedLivro;
 	}
 
 	@Transactional

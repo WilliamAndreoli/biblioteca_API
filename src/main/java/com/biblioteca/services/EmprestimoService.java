@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Emprestimo;
+import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
+import com.biblioteca.entities.Status;
 import com.biblioteca.entities.Usuario;
 import com.biblioteca.exceptions.UsuarioNotFoundException;
 import com.biblioteca.repositories.EmprestimoRepository;
@@ -109,6 +111,18 @@ public class EmprestimoService {
 
 	}
 
+	public Emprestimo alteraStatus(Status status, Integer id) {
+		Optional<Emprestimo> emprestimo = emprestimoRepository.findById(id);
+		
+		Emprestimo existingEmprestimo = emprestimo.get();
+		
+		existingEmprestimo.setStatus(status);
+		
+		Emprestimo savedEmprestimo = emprestimoRepository.save(existingEmprestimo);
+		
+		return savedEmprestimo;
+	}
+	
 	@Transactional
 	public void deleteById(Integer id) {
 		emprestimoRepository.deleteById(id);

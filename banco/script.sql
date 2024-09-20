@@ -112,4 +112,7 @@ values
 
 INSERT INTO usuario (nome, email, senha, status, tipo_usuario_id) values 
 	("Aluno 1", "aluno@teste.com", "12345", "ATIVO" , 2);
+    
+INSERT INTO usuario (nome, email, senha, tipo_usuario_id) values
+("Aluno Teste", "aluno1@teste.com", "1234", 2);
 

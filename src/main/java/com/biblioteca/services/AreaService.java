@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Area;
+import com.biblioteca.entities.Area;
+import com.biblioteca.entities.Status;
 import com.biblioteca.repositories.AreaRepository;
 
 import jakarta.transaction.Transactional;
@@ -27,6 +29,16 @@ public class AreaService {
 	public Area save(Area area) {
         return areaRepository.save(area);
     }
+	
+	public Area alteraStatus(Status status, String descricao) {
+		Area area = areaRepository.findByDescricao(descricao);
+		
+		area.setStatus(status);
+		
+		Area savedArea = areaRepository.save(area);
+		
+		return savedArea;
+	}
 
 	//Deleta por nome
 	@Transactional
