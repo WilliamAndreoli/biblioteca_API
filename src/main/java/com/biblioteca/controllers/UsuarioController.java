@@ -61,9 +61,9 @@ public class UsuarioController {
         return ResponseEntity.ok(savedUsuario);
     }
 
-    @PutMapping("id/{id}")
-    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Integer id, @RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO usuario = usuarioService.findById(id);
+    @PutMapping("email/{email}")
+    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
+        UsuarioDTO usuario = usuarioService.findByEmail(email);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
@@ -75,13 +75,13 @@ public class UsuarioController {
         return ResponseEntity.ok(updatedUsuario);
     }
 
-    @DeleteMapping("/id/{id}")
-    public ResponseEntity<Void> deleteUsuarioById(@PathVariable Integer id) {
-        UsuarioDTO usuario = usuarioService.findById(id);
+    @DeleteMapping("/email/{email}")
+    public ResponseEntity<Void> deleteUsuarioById(@PathVariable String email) {
+        UsuarioDTO usuario = usuarioService.findByEmail(email);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
-        usuarioService.deleteById(id);
+        usuarioService.deleteByEmail(email);
         return ResponseEntity.noContent().build();
     }
 }

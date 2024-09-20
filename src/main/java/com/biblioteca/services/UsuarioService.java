@@ -64,6 +64,11 @@ public class UsuarioService {
     public void deleteById(Integer id) {
         usuarioRepository.deleteById(id);
     }
+    
+    @Transactional
+    public void deleteByEmail(String email) {
+        usuarioRepository.deleteByEmail(email);
+    }
 
     public List<UsuarioDTO> findByNome(String nome) {
         return usuarioRepository.findByNome(nome).stream()
