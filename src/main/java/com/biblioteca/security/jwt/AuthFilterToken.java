@@ -53,10 +53,7 @@ public class AuthFilterToken extends OncePerRequestFilter {
 			}
 		} catch(JwtException e) {
 			System.out.println("Ocorreu um erro ao processar o token: " + e.getMessage());
-		} catch(EditoraNotFoundException e) {
-			System.out.println("Não existe editora com esse nome: " + e.getMessage());
-		}
-		finally {
+		} finally {
 			filterChain.doFilter(request, response);
 		}
 		

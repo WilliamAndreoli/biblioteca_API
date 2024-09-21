@@ -12,6 +12,7 @@ import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
 import com.biblioteca.exceptions.LivroNotFoundException;
+import com.biblioteca.exceptions.LoginErrorException;
 import com.biblioteca.exceptions.UsuarioNotFoundException;
 
 @RestControllerAdvice
@@ -57,6 +58,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, String>> handleUsuarioNotFound(UsuarioNotFoundException ex) {
 		Map<String, String> response = new HashMap<>();
 	    response.put("error", "Usuário não encontrado");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(LoginErrorException.class)
+    public ResponseEntity<Map<String, String>> handleLoginError(LoginErrorException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Credências inválidas");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

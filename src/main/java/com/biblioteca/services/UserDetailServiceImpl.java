@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Usuario;
+import com.biblioteca.exceptions.LoginErrorException;
 import com.biblioteca.repositories.UsuarioRepository;
 
 @Service
@@ -18,7 +19,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Usuario usuario = usuarioRepository.findByEmail(email);
-		return UserDetailsImpl.build(usuario);
+		
+		if (usuario != null) {
+			return UserDetailsImpl.build(usuario);
+		} else {
+			throw new LoginErrorException("Credências Inválidas, tente novamente");
+		}
+		
+		
 	}
 
 }
