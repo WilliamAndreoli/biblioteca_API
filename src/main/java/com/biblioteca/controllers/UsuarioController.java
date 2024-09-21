@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.converters.UsuarioDTOConverter;
 import com.biblioteca.dto.UsuarioDTO;
+import com.biblioteca.dto.UsuarioNoPassDTO;
 import com.biblioteca.entities.Status;
+import com.biblioteca.exceptions.UsuarioErrorException;
 import com.biblioteca.services.UsuarioService;
 
 @RestController
@@ -33,14 +35,14 @@ public class UsuarioController {
     private PasswordEncoder passwordEncoder;
     
     @GetMapping
-    public List<UsuarioDTO> getAllUsuarios() {
-        List<UsuarioDTO> usuariosDto = usuarioService.findAll();
+    public List<UsuarioNoPassDTO> getAllUsuarios() {
+        List<UsuarioNoPassDTO> usuariosDto = usuarioService.findAll();
         return usuariosDto;
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<UsuarioDTO> findById(@PathVariable Integer id) {
-        UsuarioDTO usuarioDto = usuarioService.findById(id);
+    public ResponseEntity<UsuarioNoPassDTO> findById(@PathVariable Integer id) {
+        UsuarioNoPassDTO usuarioDto = usuarioService.findById(id);
         if (usuarioDto == null) {
             return ResponseEntity.notFound().build();
         }
@@ -48,8 +50,8 @@ public class UsuarioController {
     }
     
     @GetMapping("/email/{email}")
-    public ResponseEntity<UsuarioDTO> findByEmail(@PathVariable String email) {
-        UsuarioDTO usuarioDto = usuarioService.findByEmail(email);
+    public ResponseEntity<UsuarioNoPassDTO> findByEmail(@PathVariable String email) {
+        UsuarioNoPassDTO usuarioDto = usuarioService.findByEmailNoPass(email);
         if (usuarioDto == null) {
             return ResponseEntity.notFound().build();
         }
@@ -57,17 +59,23 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioNoPassDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
         if(usuarioDTO.getStatus() == null) {
         	usuarioDTO.setStatus(Status.ATIVO);
         }
+        
+        UsuarioNoPassDTO existingUsuario = usuarioService.findByEmailNoPass(usuarioDTO.getEmail());
+        
+        if(existingUsuario != null) {
+        	throw new UsuarioErrorException("Já existe um usuário com esse e-mail");
+        }
     	
-    	UsuarioDTO savedUsuario = usuarioService.save(usuarioDTO);
+    	UsuarioNoPassDTO savedUsuario = usuarioService.save(usuarioDTO);
         return ResponseEntity.ok(savedUsuario);
     }
 
     @PutMapping("email/{email}")
-    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioNoPassDTO> updateUsuario(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO usuario = usuarioService.findByEmail(email);
         if (usuario == null) {
             return ResponseEntity.notFound().build();
@@ -76,12 +84,12 @@ public class UsuarioController {
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
         usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
-        UsuarioDTO updatedUsuario = usuarioService.save(usuario);
+        UsuarioNoPassDTO updatedUsuario = usuarioService.save(usuario);
         return ResponseEntity.ok(updatedUsuario);
     }
     
     @PutMapping("status/{email}")
-    public ResponseEntity<UsuarioDTO> alteraStatus(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
+    public ResponseEntity<UsuarioNoPassDTO> alteraStatus(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
     	UsuarioDTO usuario = usuarioService.findByEmail(email);
     	if (usuario == null) {
             return ResponseEntity.notFound().build();
@@ -89,7 +97,7 @@ public class UsuarioController {
     	
     	usuario.setStatus(usuarioDTO.getStatus());
     	
-        UsuarioDTO updatedUsuario = usuarioService.alteraStatus(usuario.getStatus(), email);
+        UsuarioNoPassDTO updatedUsuario = usuarioService.alteraStatus(usuario.getStatus(), email);
         return ResponseEntity.ok(updatedUsuario);
     }
 

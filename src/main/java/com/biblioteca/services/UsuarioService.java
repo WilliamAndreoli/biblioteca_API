@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.dto.UsuarioDTO;
+import com.biblioteca.dto.UsuarioNoPassDTO;
 import com.biblioteca.entities.Status;
 import com.biblioteca.entities.Tipo_Usuario;
 import com.biblioteca.entities.Usuario;
@@ -28,13 +29,13 @@ public class UsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    public List<UsuarioDTO> findAll() {
+    public List<UsuarioNoPassDTO> findAll() {
         return usuarioRepository.findAll().stream()
-            .map(this::convertToDto)
+            .map(this::convertToNoPassDto)
             .collect(Collectors.toList());
     }
 
-    public UsuarioDTO save(UsuarioDTO usuarioDto) {
+    public UsuarioNoPassDTO save(UsuarioDTO usuarioDto) {
         Usuario usuario = convertToEntity(usuarioDto);
         
         // Verificando se o Tipo_Usuario já existe
@@ -58,7 +59,7 @@ public class UsuarioService {
         
         usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
         Usuario savedUsuario = usuarioRepository.save(usuario);
-        return convertToDto(savedUsuario);
+        return convertToNoPassDto(savedUsuario);
     }
 
     @Transactional
@@ -85,19 +86,28 @@ public class UsuarioService {
         // Lançar uma exceção ou retornar null se o usuário não for encontrado
         return null;
     }
+    
+    public UsuarioNoPassDTO findByEmailNoPass(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email);
+        if (usuario != null) {
+            return convertToNoPassDto(usuario);
+        }
+        // Lançar uma exceção ou retornar null se o usuário não for encontrado
+        return null;
+    }
 
-    public UsuarioDTO findById(int id) {
+    public UsuarioNoPassDTO findById(int id) {
         Usuario usuario = usuarioRepository.findById(id).orElse(null);
-        return usuario != null ? convertToDto(usuario) : null;
+        return usuario != null ? convertToNoPassDto(usuario) : null;
     }
     
-    public UsuarioDTO alteraStatus(Status status, String email) {
+    public UsuarioNoPassDTO alteraStatus(Status status, String email) {
     	Usuario usuario = usuarioRepository.findByEmail(email);
     	
     	usuario.setStatus(status);
     	
     	Usuario savedUsuario = usuarioRepository.save(usuario);
-    	return convertToDto(savedUsuario);
+    	return convertToNoPassDto(savedUsuario);
     	
     }
 
@@ -108,6 +118,16 @@ public class UsuarioService {
             usuario.getNome(),
             usuario.getEmail(),
             usuario.getSenha(),
+            usuario.getStatus(),
+            usuario.getTipo_Usuario()
+        );
+    }
+    
+    private UsuarioNoPassDTO convertToNoPassDto(Usuario usuario) {
+        return new UsuarioNoPassDTO(
+            usuario.getId(),
+            usuario.getNome(),
+            usuario.getEmail(),
             usuario.getStatus(),
             usuario.getTipo_Usuario()
         );

@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
+import com.biblioteca.exceptions.JWTTokenException;
 import com.biblioteca.exceptions.LivroNotFoundException;
 import com.biblioteca.exceptions.LoginErrorException;
+import com.biblioteca.exceptions.UsuarioErrorException;
 import com.biblioteca.exceptions.UsuarioNotFoundException;
 
 @RestControllerAdvice
@@ -67,6 +69,24 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, String>> handleLoginError(LoginErrorException ex) {
 		Map<String, String> response = new HashMap<>();
 	    response.put("error", "Credências inválidas");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(JWTTokenException.class)
+    public ResponseEntity<Map<String, String>> handleLoginError(JWTTokenException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Erro no token");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(UsuarioErrorException.class)
+    public ResponseEntity<Map<String, String>> handleUsuarioError(UsuarioErrorException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Erro no Usuário");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
