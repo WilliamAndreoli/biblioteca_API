@@ -12,6 +12,7 @@ import com.biblioteca.dto.UsuarioNoPassDTO;
 import com.biblioteca.entities.Status;
 import com.biblioteca.entities.Tipo_Usuario;
 import com.biblioteca.entities.Usuario;
+import com.biblioteca.exceptions.UsuarioErrorException;
 import com.biblioteca.repositories.Tipo_UsuarioRepository;
 import com.biblioteca.repositories.UsuarioRepository;
 
@@ -37,6 +38,12 @@ public class UsuarioService {
 
     public UsuarioNoPassDTO save(UsuarioDTO usuarioDto) {
         Usuario usuario = convertToEntity(usuarioDto);
+        
+        Usuario existingUsuario = usuarioRepository.findByEmail(usuario.getEmail());
+        
+        if (existingUsuario != null) {
+        	throw new UsuarioErrorException("Já existe um Usuário cadastrado com esse e-mail");
+        }
         
         // Verificando se o Tipo_Usuario já existe
         Tipo_Usuario tipoUsuario = usuario.getTipo_Usuario();
