@@ -6,17 +6,18 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Area;
 import com.biblioteca.entities.Autor;
 import com.biblioteca.entities.Editora;
 import com.biblioteca.entities.Livro;
-import com.biblioteca.entities.Livro;
 import com.biblioteca.entities.Status;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
+import com.biblioteca.exceptions.LivroErrorException;
 import com.biblioteca.exceptions.LivroNotFoundException;
 import com.biblioteca.repositories.AreaRepository;
 import com.biblioteca.repositories.AutorRepository;
@@ -51,7 +52,13 @@ public class LivroService {
 		Area area = livro.getArea();
 
 		Set<Autor> autores = livro.getAutores();
-
+		
+		Optional<Livro> verificaLivro = livroRepository.findByTitulo(livro.getTitulo());
+		
+		if (verificaLivro.isPresent()) {
+			throw new LivroErrorException("Já existe um livro cadastrado com esse Título");
+		}
+	
 		// Verifica editora
 		if (editora != null) {
 			if (editora.getNome() != null) {
@@ -61,12 +68,11 @@ public class LivroService {
 				} else {
 					throw new EditoraNotFoundException("Editora não encontrada com nome: " + editora.getNome());
 				}
-			} else {
-				editora = editoraRepository.save(editora);
-				livro.setEditora(editora);
 			}
+		} else {
+			throw new LivroErrorException("O nome da editora não pode ser nulo");
 		}
-
+		
 		// Verifica Area
 		if (area != null) {
 	        if (area.getDescricao() != null) {
@@ -76,11 +82,10 @@ public class LivroService {
 	            } else {
 	                throw new AreaNotFoundException("Área não encontrada com descrição: " + area.getDescricao());
 	            }
-	        } else {
-	            area = areaRepository.save(area);
-	            livro.setArea(area);
 	        }
-	    }
+	    } else {
+            throw new LivroErrorException("A descrição da Área não pode ser nulo");
+        }
 
 		// Verifica Autores
 		if (autores != null && !autores.isEmpty()) {
@@ -99,6 +104,8 @@ public class LivroService {
 	            }
 	        }
 	        livro.setAutores(autoresToSave);
+	    } else {
+	    	throw new LivroErrorException("Autores do Livro não pode ser nulo");
 	    }
 
 		return livroRepository.save(livro);

@@ -12,6 +12,7 @@ import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
 import com.biblioteca.exceptions.JWTTokenException;
+import com.biblioteca.exceptions.LivroErrorException;
 import com.biblioteca.exceptions.LivroNotFoundException;
 import com.biblioteca.exceptions.LoginErrorException;
 import com.biblioteca.exceptions.UsuarioErrorException;
@@ -87,6 +88,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, String>> handleUsuarioError(UsuarioErrorException ex) {
 		Map<String, String> response = new HashMap<>();
 	    response.put("error", "Erro no Usuário");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(LivroErrorException.class)
+    public ResponseEntity<Map<String, String>> handleUsuarioError(LivroErrorException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Erro no Livro");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
