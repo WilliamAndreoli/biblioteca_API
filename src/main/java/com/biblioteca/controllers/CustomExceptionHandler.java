@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.biblioteca.exceptions.AreaErrorException;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
@@ -35,6 +36,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, String>> handleAreaNotFound(AreaNotFoundException ex) {
     	Map<String, String> response = new HashMap<>();
 	    response.put("error", "Área não encontrada");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(AreaErrorException.class)
+    public ResponseEntity<Map<String, String>> handleAreaError(AreaErrorException ex) {
+    	Map<String, String> response = new HashMap<>();
+	    response.put("error", "Erro na Area");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
