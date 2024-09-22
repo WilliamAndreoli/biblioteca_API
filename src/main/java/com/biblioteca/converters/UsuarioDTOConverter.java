@@ -20,7 +20,7 @@ public class UsuarioDTOConverter {
         usuarioDTO.setId(usuario.getId());
         usuarioDTO.setNome(usuario.getNome());
         usuarioDTO.setEmail(usuario.getEmail());
-        usuarioDTO.setTipoUsuario(usuario.getTipo_usuario());
+        usuarioDTO.setTipoUsuario(usuario.getTipo_Usuario());
         return usuarioDTO;
     }
 
@@ -30,7 +30,7 @@ public class UsuarioDTOConverter {
         usuario.setNome(usuarioDTO.getNome());
         usuario.setEmail(usuarioDTO.getEmail());
         usuario.setSenha(usuarioDTO.getSenha());
-        usuario.setTipo_usuario(tipoUsuarioService.findByDescricao(usuarioDTO.getTipoUsuario().getDescricao()));
+        usuario.setTipo_Usuario(tipoUsuarioService.findByDescricao(usuarioDTO.getTipoUsuario().getDescricao()));
         return usuario;
     }
 }

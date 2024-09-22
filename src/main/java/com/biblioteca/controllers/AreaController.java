@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Area;
+import com.biblioteca.entities.Area;
 import com.biblioteca.services.AreaService;
 
 @RestController
@@ -39,7 +40,7 @@ public class AreaController {
         return areaService.save(area);
     }
 	
-	@PutMapping("/{descricao}")
+	@PutMapping("descricao/{descricao}")
     public ResponseEntity<Area> updateArea(@PathVariable String descricao, @RequestBody Area areaDetails) {
         Area area = areaService.findByDescricao(descricao);
         if (area == null) {
@@ -48,6 +49,19 @@ public class AreaController {
         area.setDescricao(areaDetails.getDescricao());
         return ResponseEntity.ok(areaService.save(area));
     }
+	
+	@PutMapping("status/{descricao}")
+	public ResponseEntity<Area> alteraStatus(@PathVariable String descricao, @RequestBody Area areaDetails) {
+		Area area = areaService.findByDescricao(descricao);
+		if (area == null) {
+            return ResponseEntity.notFound().build();
+        }
+		
+		area.setStatus(areaDetails.getStatus());
+		
+		Area updatedArea = areaService.alteraStatus(area.getStatus(), descricao);
+		return ResponseEntity.ok(areaService.save(area));
+	}
 	
 	@DeleteMapping("/descricao/{descricao}")
     public ResponseEntity<Void> deleteAreaByDescricao(@PathVariable String descricao) {

@@ -10,6 +10,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.biblioteca.exceptions.JWTTokenException;
 import com.biblioteca.services.UserDetailServiceImpl;
 
 import jakarta.servlet.FilterChain;
@@ -34,6 +35,8 @@ public class AuthFilterToken extends OncePerRequestFilter {
 			String jwt = getToken(request);
 			if(jwt != null && jwtUtil.validateJwtToken(jwt)) {
 				
+				System.out.println("Token JWT validado com sucesso: " + jwt);
+				
 				String username = jwtUtil.getUserNameToken(jwt);
 				
 				UserDetails userDetails = userDetailService.loadUserByUsername(username);
@@ -42,9 +45,13 @@ public class AuthFilterToken extends OncePerRequestFilter {
 			
 				SecurityContextHolder.getContext().setAuthentication(auth);
 				
+				 System.out.println("Usuário identificado no token: " + username);
+				
+			} else {
+				throw new JWTTokenException("Token JWT inválido ou ausente");
 			}
-		} catch(Exception e) {
-			System.out.println("Ocorru um erro ao processar o token: " + e.getMessage());
+		} catch(JWTTokenException e) {
+			System.out.println("Ocorreu um erro ao processar o token: " + e.getMessage());
 		} finally {
 			filterChain.doFilter(request, response);
 		}

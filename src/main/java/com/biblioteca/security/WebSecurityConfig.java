@@ -61,6 +61,10 @@ public class WebSecurityConfig {
 							.requestMatchers(HttpMethod.POST, "/editoras/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.PUT, "/editoras/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.DELETE, "/editoras/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.GET, "/autores/**").permitAll()
+							.requestMatchers(HttpMethod.POST, "/autores/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT, "/autores/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/autores/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.GET, "/areas/**").permitAll()
 							.requestMatchers(HttpMethod.POST, "/areas/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.PUT, "/areas/**").hasRole("ADMIN")
@@ -69,7 +73,6 @@ public class WebSecurityConfig {
 							.requestMatchers(HttpMethod.GET, "/emprestimos/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.DELETE, "/emprestimos/**").hasRole("ADMIN")
 							.requestMatchers(HttpMethod.PUT, "/emprestimos/**").hasRole("ADMIN")
-							.requestMatchers(HttpMethod.POST, "/emprestimos/**").permitAll()
 							.anyRequest().authenticated());
 		
 		http.addFilterBefore(authFilterToken(), UsernamePasswordAuthenticationFilter.class);

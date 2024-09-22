@@ -3,6 +3,8 @@ package com.biblioteca.entities;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +20,9 @@ public class Editora {
 	private String nome;
 	
 	private String endereco;
+	
+	@Enumerated(EnumType.STRING)
+	private Status status = Status.ATIVO;
 	
 	public Integer getId() {
 		return id;
@@ -37,6 +42,14 @@ public class Editora {
 	
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override

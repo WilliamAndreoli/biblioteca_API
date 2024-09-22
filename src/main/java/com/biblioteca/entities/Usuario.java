@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,9 @@ public class Usuario {
 	private String email;
 	
 	private String senha;
+
+	@Enumerated(EnumType.STRING) // Usando EnumType.STRING para armazenar o nome do enum
+    private Status status;
 	
 	@ManyToOne
     @JoinColumn(name = "tipo_usuario_id", nullable = false)
@@ -63,17 +68,39 @@ public class Usuario {
 		this.senha = senha;
 	}
 	
-	public Tipo_Usuario getTipo_usuario() {
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Tipo_Usuario getTipo_Usuario() {
 		return tipo_Usuario;
 	}
 	
-	public void setTipo_usuario(Tipo_Usuario tipo_usuario) {
+	public void setTipo_Usuario(Tipo_Usuario tipo_usuario) {
 		this.tipo_Usuario = tipo_usuario;
 	}
 	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + tipo_Usuario.getDescricao().toUpperCase()));
     }
+	
+	public void alteraStatus(Status status) {
+		if(status != null) {
+			
+			if (status == status.ATIVO) {
+				this.status = status.ATIVO;
+			} if(status == status.INATIVO) {
+				this.status = status.INATIVO;
+			}
+			
+		} else {
+			//Tratativa
+		}
+	}
 
 	@Override
 	public int hashCode() {

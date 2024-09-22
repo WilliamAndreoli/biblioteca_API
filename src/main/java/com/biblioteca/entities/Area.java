@@ -3,6 +3,8 @@ package com.biblioteca.entities;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,6 +17,9 @@ public class Area {
 	private Integer id;
 	
 	private String descricao;
+	
+	@Enumerated(EnumType.STRING)
+	private Status status = Status.ATIVO;
 	
 	public Integer getId() {
 		return id;
@@ -30,6 +35,14 @@ public class Area {
 	
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class EditoraController {
         return editoraService.save(editora);
     }
 	
-	@PutMapping("/{id}")
+	@PutMapping("nome/{nome}")
     public ResponseEntity<Editora> updateEditora(@PathVariable String nome, @RequestBody Editora editoraDetails) {
         Editora editora = editoraService.findByNome(nome);
         if (editora == null) {
@@ -50,6 +50,19 @@ public class EditoraController {
         editora.setEndereco(editoraDetails.getEndereco());
         return ResponseEntity.ok(editoraService.save(editora));
     }
+	
+	@PutMapping("status/{nome}")
+	public ResponseEntity<Editora> alteraStatus(@PathVariable String nome, @RequestBody Editora editoraDetails) {
+		Editora editora = editoraService.findByNome(nome);
+		if (editora == null) {
+            return ResponseEntity.notFound().build();
+        }
+		
+		editora.setStatus(editoraDetails.getStatus());
+		
+		Editora updatedEditora = editoraService.alteraStatus(editora.getStatus(), nome);
+		return ResponseEntity.ok(editoraService.save(editora));
+	}
 	
 	@DeleteMapping("/nome/{nome}")
     public ResponseEntity<Void> deleteEditoraByNome(@PathVariable String nome) {

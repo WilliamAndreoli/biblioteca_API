@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Editora;
+import com.biblioteca.entities.Status;
+import com.biblioteca.exceptions.EditoraErrorException;
 import com.biblioteca.repositories.EditoraRepository;
 
 import jakarta.transaction.Transactional;
@@ -21,8 +23,27 @@ public class EditoraService {
 	}
 	
 	public Editora save(Editora editora) {
-        return editoraRepository.save(editora);
+		
+		Editora verificaEditora = editoraRepository.findByNome(editora.getNome());
+		
+		if(verificaEditora == null) {
+			return editoraRepository.save(editora);	
+		} else {
+			throw new EditoraErrorException("Já existe uma Editora cadastrada com esse nome.");
+		}
+		
+        
     }
+	
+	public Editora alteraStatus(Status status, String nome) {
+		Editora editora = editoraRepository.findByNome(nome);
+		
+		editora.setStatus(status);
+		
+		Editora savedEditora = editoraRepository.save(editora);
+		
+		return savedEditora;
+	}
 
 	//Deleta por nome
 	@Transactional

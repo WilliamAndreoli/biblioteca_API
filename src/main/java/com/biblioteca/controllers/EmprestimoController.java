@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Emprestimo;
+import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
 import com.biblioteca.services.EmprestimoService;
 import com.biblioteca.services.Tipo_UsuarioService;
@@ -66,6 +67,21 @@ public class EmprestimoController {
 		return ResponseEntity.ok(emprestimoService.devolucaoLivro(emprestimo));
 	}
 	
+	@PutMapping("status/{id}")
+	public ResponseEntity<Emprestimo> alteraStatus(@PathVariable Integer id, @RequestBody Emprestimo emprestimoDetails) throws Exception {
+		Optional<Emprestimo> optionalEmprestimo = emprestimoService.findById(id);
+
+		if (!optionalEmprestimo.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		Emprestimo emprestimo = optionalEmprestimo.get();
+		
+		emprestimo.setStatus(emprestimoDetails.getStatus());
+		
+		Emprestimo updatedEmprestimo = emprestimoService.alteraStatus(emprestimo.getStatus(), id);
+		return ResponseEntity.ok(emprestimoService.save(emprestimo));
+	}
 
 	@DeleteMapping("/id/{id}")
 	public ResponseEntity<Void> deleteEmprestimoById(@PathVariable Integer id) {

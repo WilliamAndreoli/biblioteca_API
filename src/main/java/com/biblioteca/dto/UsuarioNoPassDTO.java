@@ -4,24 +4,22 @@ import com.biblioteca.entities.Status;
 import com.biblioteca.entities.Tipo_Usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class UsuarioDTO {
+public class UsuarioNoPassDTO {
 
 	private Integer id;
     private String nome;
     private String email;
-    private String senha;
     @JsonFormat
     private Status status = Status.ATIVO;
     private Tipo_Usuario tipoUsuario;
 
     // Construtores
-    public UsuarioDTO() {}
+    public UsuarioNoPassDTO() {}
 
-    public UsuarioDTO(Integer id, String nome, String email, String senha, Status status, Tipo_Usuario tipoUsuario) {
+    public UsuarioNoPassDTO(Integer id, String nome, String email, Status status, Tipo_Usuario tipoUsuario) {
         this.id = id;
         this.nome = nome;
         this.email = email;
-        this.senha = senha;
         this.status = status;
         this.tipoUsuario = tipoUsuario;
     }
@@ -51,14 +49,6 @@ public class UsuarioDTO {
         this.email = email;
     }
 
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
     public Status getStatus() {
 		return status;
 	}
@@ -74,8 +64,5 @@ public class UsuarioDTO {
     public void setTipoUsuario(Tipo_Usuario tipoUsuario) {
         this.tipoUsuario = tipoUsuario;
     }
-
-    
-    
 	
 }

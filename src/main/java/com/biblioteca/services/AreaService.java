@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Area;
+import com.biblioteca.entities.Status;
+import com.biblioteca.exceptions.AreaErrorException;
 import com.biblioteca.repositories.AreaRepository;
 
 import jakarta.transaction.Transactional;
@@ -25,8 +27,26 @@ public class AreaService {
 	}
 
 	public Area save(Area area) {
-        return areaRepository.save(area);
+		
+		Area verificaArea = areaRepository.findByDescricao(area.getDescricao());
+		
+		if(verificaArea == null) {
+			return areaRepository.save(area);
+		} else {
+			throw new AreaErrorException("Já existe uma Área cadastrada com essa descrição.");
+		}
+        
     }
+	
+	public Area alteraStatus(Status status, String descricao) {
+		Area area = areaRepository.findByDescricao(descricao);
+		
+		area.setStatus(status);
+		
+		Area savedArea = areaRepository.save(area);
+		
+		return savedArea;
+	}
 
 	//Deleta por nome
 	@Transactional

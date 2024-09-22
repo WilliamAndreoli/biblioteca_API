@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Livro;
+import com.biblioteca.entities.Livro;
 import com.biblioteca.services.LivroService;
 
 @RestController
@@ -29,9 +30,9 @@ public class LivroController {
 		return livroService.findAll();
 	}
 
-	@GetMapping("/id/{id}")
-	public Optional<Livro> getLivroById(@PathVariable Integer id) {
-		return livroService.findById(id);
+	@GetMapping("/titulo/{titulo}")
+	public Optional<Livro> getLivroById(@PathVariable String titulo) {
+		return livroService.findByTitulo(titulo);
 	}
 
 	
@@ -40,10 +41,10 @@ public class LivroController {
 		return livroService.save(livro);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<Livro> updateLivro(@PathVariable Integer id,
+	@PutMapping("/titulo/{titulo}")
+	public ResponseEntity<Livro> updateLivro(@PathVariable String titulo,
 			@RequestBody Livro livroDetails) {
-		Optional<Livro> optionalLivro = livroService.findById(id);
+		Optional<Livro> optionalLivro = livroService.findByTitulo(titulo);
 
 		if (!optionalLivro.isPresent()) {
 			return ResponseEntity.notFound().build();
@@ -61,16 +62,32 @@ public class LivroController {
 
 		return ResponseEntity.ok(livroService.save(livro));
 	}
-
-	@DeleteMapping("/id/{id}")
-	public ResponseEntity<Void> deleteLivroById(@PathVariable Integer id) {
-		Optional<Livro> optionalLivro = livroService.findById(id);
+	
+	@PutMapping("status/{titulo}")
+	public ResponseEntity<Livro> alteraStatus(@PathVariable String titulo, @RequestBody Livro livroDetails) throws Exception {
+		Optional<Livro> optionalLivro = livroService.findByTitulo(titulo);
 
 		if (!optionalLivro.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		livroService.deleteById(id);
+		Livro livro = optionalLivro.get();
+		
+		livro.setStatus(livroDetails.getStatus());
+		
+		Livro updatedLivro = livroService.alteraStatus(livro.getStatus(), titulo);
+		return ResponseEntity.ok(livroService.save(livro));
+	}
+
+	@DeleteMapping("/titulo/{titulo}")
+	public ResponseEntity<Void> deleteLivroById(@PathVariable String titulo) {
+		Optional<Livro> optionalLivro = livroService.findByTitulo(titulo);
+
+		if (!optionalLivro.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		livroService.deleteByTitulo(titulo);
 		return ResponseEntity.noContent().build();
 	}
 	

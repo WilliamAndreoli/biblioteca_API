@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.biblioteca.dto.AcessDTO;
 import com.biblioteca.dto.AuthenticationDTO;
+import com.biblioteca.exceptions.LoginErrorException;
 import com.biblioteca.security.jwt.JwtUtils;
 
 @Service
@@ -44,7 +45,7 @@ public class AuthService {
 			
 		} catch(BadCredentialsException e) {
 			//TODO Implements error
-			throw new RuntimeException("Credenciais inválidas");
+			throw new LoginErrorException("Credenciais inválidas");
 		}
 	
 	}

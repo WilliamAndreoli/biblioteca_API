@@ -68,6 +68,10 @@ public class Tipo_Usuario {
 		Tipo_Usuario other = (Tipo_Usuario) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	public Tipo_Usuario orElse(Object object) {
+		return null;
+	}
 	
 	
 	
