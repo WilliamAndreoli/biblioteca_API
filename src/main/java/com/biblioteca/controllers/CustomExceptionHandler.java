@@ -12,6 +12,7 @@ import com.biblioteca.exceptions.AreaErrorException;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorErrorException;
 import com.biblioteca.exceptions.AutorNotFoundException;
+import com.biblioteca.exceptions.EditoraErrorException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
 import com.biblioteca.exceptions.EmprestimoErrorException;
 import com.biblioteca.exceptions.JWTTokenException;
@@ -28,6 +29,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, String>> handleEditoraNotFound(EditoraNotFoundException ex) {
 		Map<String, String> response = new HashMap<>();
 	    response.put("error", "Editora não encontrada");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+	
+	@ExceptionHandler(EditoraErrorException.class)
+    public ResponseEntity<Map<String, String>> handleEditoraError(EditoraErrorException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Erro na Editora");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

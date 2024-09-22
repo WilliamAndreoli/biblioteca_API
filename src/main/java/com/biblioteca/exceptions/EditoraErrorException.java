@@ -1,10 +1,11 @@
 package com.biblioteca.exceptions;
 
-public class AutorNotFoundException extends RuntimeException {
-	
+public class EditoraErrorException extends RuntimeException {
+
 	private static final long serialVersionUID = 1L;
 
-	public AutorNotFoundException(String message) {
+	public EditoraErrorException(String message) {
         super(message);
     }
+	
 }
