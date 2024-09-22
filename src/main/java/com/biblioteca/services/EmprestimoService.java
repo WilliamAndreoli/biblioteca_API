@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.biblioteca.entities.Emprestimo;
-import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
 import com.biblioteca.entities.Status;
 import com.biblioteca.entities.Usuario;
+import com.biblioteca.exceptions.EmprestimoErrorException;
 import com.biblioteca.exceptions.UsuarioNotFoundException;
 import com.biblioteca.repositories.EmprestimoRepository;
 import com.biblioteca.repositories.LivroRepository;
@@ -51,48 +51,51 @@ public class EmprestimoService {
 			if (usuario.getId() != null) {
 				// Buscar o Usuario existente
 				Usuario existingUsuario = usuarioRepository.findById(usuario.getId()).orElse(null);
-				
+
 				if (existingUsuario != null) {
-					// Se o Usuario existe, associe-o ao Emprestimo
 					emprestimo.setUsuario(existingUsuario);
+				} else {
+					throw new UsuarioNotFoundException("Usuário inexistente");
 				}
 			} else {
-				throw new UsuarioNotFoundException("Usuario inexistente.");
+				throw new UsuarioNotFoundException("O Id de Usuário não pode ser nulo");
 			}
+		} else {
+			throw new EmprestimoErrorException("Emprestimo não pode ser cadastrado sem Usuário");
 		}
 
-		if (livro != null) {
+		Optional<Livro> optionalLivro = livroRepository.findByTitulo(livro.getTitulo());
+
+		if (optionalLivro.isPresent()) {
 
 			if (livro.getTitulo() != null) {
-				Optional<Livro> optionalLivro = livroRepository.findByTitulo(livro.getTitulo());
 
-				if (optionalLivro.get() != null) {
+				Livro existingLivro = optionalLivro.get();
 
-					Livro existingLivro = optionalLivro.get();
-
-					if (existingLivro.getQuantidadeDisponivel() > 0) {
-						existingLivro.setQuantidadeDisponivel(existingLivro.getQuantidadeDisponivel() - 1);
-						livroRepository.save(existingLivro);
-						emprestimo.setLivro(existingLivro);
-					} else {
-						throw new RuntimeException("Livro indisponível para empréstimo.");
-					}
+				if (existingLivro.getQuantidadeDisponivel() > 0) {
+					existingLivro.setQuantidadeDisponivel(existingLivro.getQuantidadeDisponivel() - 1);
+					livroRepository.save(existingLivro);
+					emprestimo.setLivro(existingLivro);
+				} else {
+					throw new EmprestimoErrorException("Livro indisponível para empréstimo.");
 				}
 
 			} else {
-				throw new RuntimeException("Livro inexistente.");
+				throw new EmprestimoErrorException("Título do Livro não pode ser nulo.");
 			}
 
+		} else {
+			throw new EmprestimoErrorException("O Livro não existe.");
 		}
-		
+
 		emprestimo.setData_emprestimo(new Date());
-		
+
 		// Calcula a data de previsão com base no tipo de usuário
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(emprestimo.getData_emprestimo());
-        cal.add(Calendar.DAY_OF_MONTH, emprestimo.getUsuario().getTipo_Usuario().getDias_emprestimo());
-        emprestimo.setData_previsao(cal.getTime());
-		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(emprestimo.getData_emprestimo());
+		cal.add(Calendar.DAY_OF_MONTH, emprestimo.getUsuario().getTipo_Usuario().getDias_emprestimo());
+		emprestimo.setData_previsao(cal.getTime());
+
 		emprestimo.calcularMulta();
 		return emprestimoRepository.save(emprestimo);
 	}
@@ -113,16 +116,16 @@ public class EmprestimoService {
 
 	public Emprestimo alteraStatus(Status status, Integer id) {
 		Optional<Emprestimo> emprestimo = emprestimoRepository.findById(id);
-		
+
 		Emprestimo existingEmprestimo = emprestimo.get();
-		
+
 		existingEmprestimo.setStatus(status);
-		
+
 		Emprestimo savedEmprestimo = emprestimoRepository.save(existingEmprestimo);
-		
+
 		return savedEmprestimo;
 	}
-	
+
 	@Transactional
 	public void deleteById(Integer id) {
 		emprestimoRepository.deleteById(id);

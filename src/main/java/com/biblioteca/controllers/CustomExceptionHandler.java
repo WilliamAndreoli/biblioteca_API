@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.biblioteca.exceptions.AreaNotFoundException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
+import com.biblioteca.exceptions.EmprestimoErrorException;
 import com.biblioteca.exceptions.JWTTokenException;
 import com.biblioteca.exceptions.LivroErrorException;
 import com.biblioteca.exceptions.LivroNotFoundException;
@@ -97,6 +98,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, String>> handleUsuarioError(LivroErrorException ex) {
 		Map<String, String> response = new HashMap<>();
 	    response.put("error", "Erro no Livro");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(EmprestimoErrorException.class)
+    public ResponseEntity<Map<String, String>> handleEmprestimoError(EmprestimoErrorException ex) {
+		Map<String, String> response = new HashMap<>();
+	    response.put("error", "Erro no Emprestimo");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
