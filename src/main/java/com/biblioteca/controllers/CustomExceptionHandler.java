@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.biblioteca.exceptions.AreaErrorException;
 import com.biblioteca.exceptions.AreaNotFoundException;
+import com.biblioteca.exceptions.AutorErrorException;
 import com.biblioteca.exceptions.AutorNotFoundException;
 import com.biblioteca.exceptions.EditoraNotFoundException;
 import com.biblioteca.exceptions.EmprestimoErrorException;
@@ -54,6 +55,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<Map<String, String>> handleAutorNotFound(AutorNotFoundException ex) {
     	Map<String, String> response = new HashMap<>();
 	    response.put("error", "Autor não encontrado");
+	    response.put("message", ex.getMessage());
+
+	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(AutorErrorException.class)
+    public ResponseEntity<Map<String, String>> handleErrorFound(AutorErrorException ex) {
+    	Map<String, String> response = new HashMap<>();
+	    response.put("error", "Erro no Autor");
 	    response.put("message", ex.getMessage());
 
 	    return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);

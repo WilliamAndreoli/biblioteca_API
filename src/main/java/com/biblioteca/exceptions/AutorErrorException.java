@@ -1,10 +1,11 @@
 package com.biblioteca.exceptions;
 
-public class AreaNotFoundException extends RuntimeException {
-	
+public class AutorErrorException extends RuntimeException {
+
 	private static final long serialVersionUID = 1L;
 
-	public AreaNotFoundException(String message) {
+	public AutorErrorException(String message) {
         super(message);
     }
+	
 }
