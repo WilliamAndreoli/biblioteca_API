@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.biblioteca.converters.UsuarioDTOConverter;
 import com.biblioteca.dto.UsuarioDTO;
 import com.biblioteca.dto.UsuarioNoPassDTO;
+import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Status;
 import com.biblioteca.exceptions.UsuarioErrorException;
 import com.biblioteca.services.UsuarioService;
@@ -47,6 +48,11 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(usuarioDto);
+    }
+    
+    @GetMapping("/emprestimos/{id}")
+    public List<Emprestimo> getEmprestimosPorUsuario(@PathVariable Integer id) {
+        return usuarioService.getEmprestimosDoUsuario(id);
     }
     
     @GetMapping("/email/{email}")

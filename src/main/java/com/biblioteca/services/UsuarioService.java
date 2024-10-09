@@ -1,14 +1,17 @@
 package com.biblioteca.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.biblioteca.converters.UsuarioDTOConverter;
 import com.biblioteca.dto.UsuarioDTO;
 import com.biblioteca.dto.UsuarioNoPassDTO;
+import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Status;
 import com.biblioteca.entities.Tipo_Usuario;
 import com.biblioteca.entities.Usuario;
@@ -28,12 +31,28 @@ public class UsuarioService {
     private Tipo_UsuarioRepository tipoUsuarioRepository;
     
     @Autowired
+    private EmprestimoService emprestimoService;
+    
+    @Autowired
     private PasswordEncoder passwordEncoder;
     
     public List<UsuarioNoPassDTO> findAll() {
         return usuarioRepository.findAll().stream()
             .map(this::convertToNoPassDto)
             .collect(Collectors.toList());
+    }
+    
+    public List<Emprestimo> getEmprestimosDoUsuario(Integer usuarioId) {
+        Optional<Usuario> usuario = usuarioRepository.findById(usuarioId);
+        
+        Usuario existingUsuariu = usuario.get();
+        
+        if(existingUsuariu != null) {
+        	return emprestimoService.findEmprestimosByUsuario(existingUsuariu);
+        } else {
+        	throw new UsuarioErrorException("Usuário não encontrado");
+        }
+        
     }
 
     public UsuarioNoPassDTO save(UsuarioDTO usuarioDto) {

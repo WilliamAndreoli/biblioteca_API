@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.biblioteca.dto.UsuarioNoPassDTO;
 import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
 import com.biblioteca.entities.Status;
@@ -41,6 +42,10 @@ public class EmprestimoService {
 		emprestimos.forEach(Emprestimo::calcularMulta);
 		return emprestimos;
 	}
+	
+	public List<Emprestimo> findEmprestimosByUsuario(Usuario usuario) {
+        return emprestimoRepository.findByUsuario(usuario);
+    }
 
 	public Emprestimo save(Emprestimo emprestimo) throws Exception {
 		Usuario usuario = emprestimo.getUsuario();
