@@ -53,6 +53,10 @@ public class LivroService {
 	public List<Livro> findLivrosByArea(String descricaoArea) {
         return livroRepository.findByAreaDescricao(descricaoArea);
     }
+	
+	public List<Livro> findLivrosByEditora(String nomeEditora) {
+        return livroRepository.findByEditoraNome(nomeEditora);
+    }
 
 	public Livro save(Livro livro) throws EntityNotFoundException {
 		Editora editora = livro.getEditora();
