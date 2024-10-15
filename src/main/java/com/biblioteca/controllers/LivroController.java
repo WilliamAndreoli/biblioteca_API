@@ -41,6 +41,12 @@ public class LivroController {
         return ResponseEntity.ok(livros);
     }
 	
+	@GetMapping("/area/{descricaoArea}")
+    public ResponseEntity<List<Livro>> getLivrosByArea(@PathVariable String descricaoArea) {
+        List<Livro> livros = livroService.findLivrosByArea(descricaoArea);
+        return ResponseEntity.ok(livros);
+    }
+	
 	@PostMapping
 	public Livro createLivro(@RequestBody Livro livro) {
 		return livroService.save(livro);
