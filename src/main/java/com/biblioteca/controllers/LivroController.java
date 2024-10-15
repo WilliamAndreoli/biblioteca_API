@@ -35,6 +35,11 @@ public class LivroController {
 		return livroService.findByTitulo(titulo);
 	}
 
+	@GetMapping("/autor/{nomeAutor}")
+    public ResponseEntity<List<Livro>> getLivrosByAutor(@PathVariable String nomeAutor) {
+        List<Livro> livros = livroService.findLivrosByAutor(nomeAutor);
+        return ResponseEntity.ok(livros);
+    }
 	
 	@PostMapping
 	public Livro createLivro(@RequestBody Livro livro) {

@@ -45,6 +45,10 @@ public class LivroService {
 	public List<Livro> findAll() {
 		return livroRepository.findAll();
 	}
+	
+	public List<Livro> findLivrosByAutor(String nomeAutor) {
+        return livroRepository.findByAutorNome(nomeAutor);
+    }
 
 	public Livro save(Livro livro) throws EntityNotFoundException {
 		Editora editora = livro.getEditora();
