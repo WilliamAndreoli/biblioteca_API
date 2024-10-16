@@ -35,6 +35,23 @@ public class LivroController {
 		return livroService.findByTitulo(titulo);
 	}
 
+	@GetMapping("/autor/{nomeAutor}")
+    public ResponseEntity<List<Livro>> getLivrosByAutor(@PathVariable String nomeAutor) {
+        List<Livro> livros = livroService.findLivrosByAutor(nomeAutor);
+        return ResponseEntity.ok(livros);
+    }
+	
+	@GetMapping("/area/{descricaoArea}")
+    public ResponseEntity<List<Livro>> getLivrosByArea(@PathVariable String descricaoArea) {
+        List<Livro> livros = livroService.findLivrosByArea(descricaoArea);
+        return ResponseEntity.ok(livros);
+    }
+	
+	@GetMapping("/editora/{editoraNome}")
+    public ResponseEntity<List<Livro>> getLivrosByEditora(@PathVariable String editoraNome) {
+        List<Livro> livros = livroService.findLivrosByEditora(editoraNome);
+        return ResponseEntity.ok(livros);
+    }
 	
 	@PostMapping
 	public Livro createLivro(@RequestBody Livro livro) {
