@@ -31,58 +31,58 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Autowired
-    private UsuarioDTOConverter usuarioDTOConverter;
+	@Autowired
+	private UsuarioDTOConverter usuarioDTOConverter;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    
-    @GetMapping
-    public List<UsuarioNoPassDTO> getAllUsuarios() {
-        List<UsuarioNoPassDTO> usuariosDto = usuarioService.findAll();
-        return usuariosDto;
-    }
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/id/{id}")
-    public ResponseEntity<UsuarioNoPassDTO> findById(@PathVariable Integer id) {
-        UsuarioNoPassDTO usuarioDto = usuarioService.findById(id);
-        if (usuarioDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(usuarioDto);
-    }
-    
-    @GetMapping("/emprestimos/{id}")
-    public List<Emprestimo> getEmprestimosPorUsuario(@PathVariable Integer id) {
-        return usuarioService.getEmprestimosDoUsuario(id);
-    }
-    
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UsuarioNoPassDTO> findByEmail(@PathVariable String email) {
-        UsuarioNoPassDTO usuarioDto = usuarioService.findByEmailNoPass(email);
-        if (usuarioDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(usuarioDto);
-    }
+	@GetMapping
+	public List<UsuarioNoPassDTO> getAllUsuarios() {
+		List<UsuarioNoPassDTO> usuariosDto = usuarioService.findAll();
+		return usuariosDto;
+	}
 
-    @PostMapping
-    public ResponseEntity<UsuarioNoPassDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        if(usuarioDTO.getStatus() == null) {
-        	usuarioDTO.setStatus(Status.ATIVO);
-        }
-        
-        UsuarioNoPassDTO existingUsuario = usuarioService.findByEmailNoPass(usuarioDTO.getEmail());
-        
-        if(existingUsuario != null) {
-        	throw new UsuarioErrorException("Já existe um usuário com esse e-mail");
-        }
-    	
-    	UsuarioNoPassDTO savedUsuario = usuarioService.save(usuarioDTO);
-        return ResponseEntity.ok(savedUsuario);
-    }
+	@GetMapping("/id/{id}")
+	public ResponseEntity<UsuarioNoPassDTO> findById(@PathVariable Integer id) {
+		UsuarioNoPassDTO usuarioDto = usuarioService.findById(id);
+		if (usuarioDto == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(usuarioDto);
+	}
 
-    @PutMapping("email/{email}")
+	@GetMapping("/emprestimos/{id}")
+	public List<Emprestimo> getEmprestimosPorUsuario(@PathVariable Integer id) {
+		return usuarioService.getEmprestimosDoUsuario(id);
+	}
+
+	@GetMapping("/email/{email}")
+	public ResponseEntity<UsuarioNoPassDTO> findByEmail(@PathVariable String email) {
+		UsuarioNoPassDTO usuarioDto = usuarioService.findByEmailNoPass(email);
+		if (usuarioDto == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(usuarioDto);
+	}
+
+	@PostMapping
+	public ResponseEntity<UsuarioNoPassDTO> createUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+		if (usuarioDTO.getStatus() == null) {
+			usuarioDTO.setStatus(Status.ATIVO);
+		}
+
+		UsuarioNoPassDTO existingUsuario = usuarioService.findByEmailNoPass(usuarioDTO.getEmail());
+
+		if (existingUsuario != null) {
+			throw new UsuarioErrorException("Já existe um usuário com esse e-mail");
+		}
+
+		UsuarioNoPassDTO savedUsuario = usuarioService.save(usuarioDTO);
+		return ResponseEntity.ok(savedUsuario);
+	}
+
+	@PutMapping("email/{email}")
     public ResponseEntity<UsuarioNoPassDTO> updateUsuario(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO usuario = usuarioService.findByEmail(email);
         if (usuario == null) {
@@ -90,32 +90,39 @@ public class UsuarioController {
         }
         usuario.setNome(usuarioDTO.getNome());
         usuario.setEmail(usuarioDTO.getEmail());
-        usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+        
+        if (usuarioDTO.getSenha() == null) {
+            usuario.setSenha(usuario.getSenha());
+        } else {
+        	usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));	
+        }
+     
         usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
         UsuarioNoPassDTO updatedUsuario = usuarioService.save(usuario);
         return ResponseEntity.ok(updatedUsuario);
     }
-    
-    @PutMapping("status/{email}")
-    public ResponseEntity<UsuarioNoPassDTO> alteraStatus(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
-    	UsuarioDTO usuario = usuarioService.findByEmail(email);
-    	if (usuario == null) {
-            return ResponseEntity.notFound().build();
-        }
-    	
-    	usuario.setStatus(usuarioDTO.getStatus());
-    	
-        UsuarioNoPassDTO updatedUsuario = usuarioService.alteraStatus(usuario.getStatus(), email);
-        return ResponseEntity.ok(updatedUsuario);
-    }
 
-    @DeleteMapping("/email/{email}")
-    public ResponseEntity<Void> deleteUsuarioById(@PathVariable String email) {
-        UsuarioDTO usuario = usuarioService.findByEmail(email);
-        if (usuario == null) {
-            return ResponseEntity.notFound().build();
-        }
-        usuarioService.deleteByEmail(email);
-        return ResponseEntity.noContent().build();
-    }
+	@PutMapping("status/{email}")
+	public ResponseEntity<UsuarioNoPassDTO> alteraStatus(@PathVariable String email,
+			@RequestBody UsuarioDTO usuarioDTO) {
+		UsuarioDTO usuario = usuarioService.findByEmail(email);
+		if (usuario == null) {
+			return ResponseEntity.notFound().build();
+		}
+
+		usuario.setStatus(usuarioDTO.getStatus());
+
+		UsuarioNoPassDTO updatedUsuario = usuarioService.alteraStatus(usuario.getStatus(), email);
+		return ResponseEntity.ok(updatedUsuario);
+	}
+
+	@DeleteMapping("/email/{email}")
+	public ResponseEntity<Void> deleteUsuarioById(@PathVariable String email) {
+		UsuarioDTO usuario = usuarioService.findByEmail(email);
+		if (usuario == null) {
+			return ResponseEntity.notFound().build();
+		}
+		usuarioService.deleteByEmail(email);
+		return ResponseEntity.noContent().build();
+	}
 }
