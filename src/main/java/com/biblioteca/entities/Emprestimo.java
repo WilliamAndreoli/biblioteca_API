@@ -21,25 +21,30 @@ public class Emprestimo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	private Date data_emprestimo;
-	
+
 	private Date data_previsao;
-	
+
 	private Date data_entrega;
-	
+
+	private Date data_pagamento;
+
 	private Double multa;
-	
+
+	@Enumerated(EnumType.STRING)
+	private Status_Pagamento pagamento = Status_Pagamento.N_PAGO;
+
 	@Enumerated(EnumType.STRING)
 	private Status status = Status.ATIVO;
-	
+
 	@ManyToOne
-    @JoinColumn(name = "livro_id", nullable = false)
+	@JoinColumn(name = "livro_id", nullable = false)
 	private Livro livro;
-	
+
 	@ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-	 @JsonIgnoreProperties({"senha", "email", "nome"}) // ou outras propriedades que você não quer atualizar
+	@JoinColumn(name = "usuario_id", nullable = false)
+	@JsonIgnoreProperties({ "senha", "email", "nome" }) // ou outras propriedades que você não quer atualizar
 	private Usuario usuario;
 
 	public Integer getId() {
@@ -70,8 +75,24 @@ public class Emprestimo {
 		return data_entrega;
 	}
 
+	public Date getData_pagamento() {
+		return data_pagamento;
+	}
+
+	public void setData_pagamento(Date data_pagamento) {
+		this.data_pagamento = data_pagamento;
+	}
+
 	public void setData_entrega(Date data_entrega) {
 		this.data_entrega = data_entrega;
+	}
+
+	public Status_Pagamento getPagamento() {
+		return pagamento;
+	}
+
+	public void setPagamento(Status_Pagamento pagamento) {
+		this.pagamento = pagamento;
 	}
 
 	public Double getMulta() {
@@ -82,7 +103,7 @@ public class Emprestimo {
 	public void setMulta(Double multa) {
 		this.multa = multa;
 	}
-	
+
 	public Status getStatus() {
 		return status;
 	}
@@ -106,38 +127,45 @@ public class Emprestimo {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-	
+
 	public void calcularMulta() {
-        if (data_entrega != null && data_entrega.after(data_previsao)) {
-            long diffInMillies = Math.abs(data_entrega.getTime() - data_previsao.getTime());
-            long diasAtraso = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-            
-           
-            // Obter a multa diária do tipo de usuário
-            Double multaDiaria = usuario.getTipo_Usuario().getMulta_diaria();
-            
-            // Calcular a multa total
-            this.multa = diasAtraso * multaDiaria;
-        } else {
-            this.multa = 0.0;
-        }
-    }
-	
+
+		if (data_pagamento != null) {
+			this.pagamento = Status_Pagamento.PAGO;
+			this.multa = 0.0;
+		} else {
+
+			if (data_entrega != null && data_entrega.after(data_previsao)) {
+				long diffInMillies = Math.abs(data_entrega.getTime() - data_previsao.getTime());
+				long diasAtraso = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+				// Obter a multa diária do tipo de usuário
+				Double multaDiaria = usuario.getTipo_Usuario().getMulta_diaria();
+
+				// Calcular a multa total
+				this.pagamento = Status_Pagamento.N_PAGO;
+				this.multa = diasAtraso * multaDiaria;
+			} else {
+				this.pagamento = null;
+				this.multa = 0.0;
+			}
+		}
+	}
+
 	public Double calcularMultaAlteraEmprestimo(Date data_entrega, Date data_previsao, Tipo_Usuario tipoUsuario) {
-        if (data_entrega != null && data_entrega.after(data_previsao)) {
-            long diffInMillies = Math.abs(data_entrega.getTime() - data_previsao.getTime());
-            long diasAtraso = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-            
-           
-            // Obter a multa diária do tipo de usuário
-            Double multaDiaria = tipoUsuario.getMulta_diaria();
-            
-            // Calcular a multa total
-            return diasAtraso * multaDiaria;
-        } else {
-            return 0.0;
-        }
-    }
+		if (data_entrega != null && data_entrega.after(data_previsao)) {
+			long diffInMillies = Math.abs(data_entrega.getTime() - data_previsao.getTime());
+			long diasAtraso = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+
+			// Obter a multa diária do tipo de usuário
+			Double multaDiaria = tipoUsuario.getMulta_diaria();
+
+			// Calcular a multa total
+			return diasAtraso * multaDiaria;
+		} else {
+			return 0.0;
+		}
+	}
 
 	@Override
 	public int hashCode() {
@@ -155,7 +183,5 @@ public class Emprestimo {
 		Emprestimo other = (Emprestimo) obj;
 		return Objects.equals(id, other.id);
 	}
-	
-	
-	
+
 }
