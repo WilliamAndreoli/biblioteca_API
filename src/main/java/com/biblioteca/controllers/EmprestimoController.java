@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.biblioteca.entities.Emprestimo;
-import com.biblioteca.entities.Emprestimo;
-import com.biblioteca.entities.Livro;
+import com.biblioteca.entities.Status_Pagamento;
 import com.biblioteca.services.EmprestimoService;
 import com.biblioteca.services.Tipo_UsuarioService;
 import com.biblioteca.services.UsuarioService;
@@ -29,10 +28,10 @@ public class EmprestimoController {
 
 	@Autowired
 	private EmprestimoService emprestimoService;
-	
+
 	@Autowired
 	private UsuarioService usuarioService;
-	
+
 	@Autowired
 	private Tipo_UsuarioService tipo_UsuarioService;
 
@@ -46,14 +45,12 @@ public class EmprestimoController {
 		return emprestimoService.findById(id);
 	}
 
-	
 	@PostMapping
 	public ResponseEntity<Emprestimo> createEmprestimo(@RequestBody Emprestimo emprestimo) throws Exception {
 		Emprestimo novoEmprestimo = emprestimoService.save(emprestimo);
 		return ResponseEntity.ok(novoEmprestimo);
 	}
 
-	
 	@PutMapping("/devolucao/{id}")
 	public ResponseEntity<Emprestimo> updateEmprestimo(@PathVariable Integer id,
 			@RequestBody Emprestimo emprestimoDetails) throws Exception {
@@ -62,27 +59,45 @@ public class EmprestimoController {
 		if (!optionalEmprestimo.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		Emprestimo emprestimo = optionalEmprestimo.get();
 		emprestimo.setData_entrega(emprestimoDetails.getData_entrega());
-		
+
 		return ResponseEntity.ok(emprestimoService.devolucaoLivro(emprestimo));
 	}
-	
+
 	@PutMapping("status/{id}")
-	public ResponseEntity<Emprestimo> alteraStatus(@PathVariable Integer id, @RequestBody Emprestimo emprestimoDetails) throws Exception {
+	public ResponseEntity<Emprestimo> alteraStatus(@PathVariable Integer id, @RequestBody Emprestimo emprestimoDetails)
+			throws Exception {
+		Optional<Emprestimo> optionalEmprestimo = emprestimoService.findById(id);
+
+		if (!optionalEmprestimo.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Emprestimo emprestimo = optionalEmprestimo.get();
+
+		emprestimo.setStatus(emprestimoDetails.getStatus());
+
+		Emprestimo updatedEmprestimo = emprestimoService.alteraStatus(emprestimo.getStatus(), id);
+		return ResponseEntity.ok(emprestimoService.save(emprestimo));
+	}
+
+	@PutMapping("/pagamento/{id}")
+	public ResponseEntity<Emprestimo> pagamentoMulta(@PathVariable Integer id, @RequestBody Emprestimo emprestimo) {
+
 		Optional<Emprestimo> optionalEmprestimo = emprestimoService.findById(id);
 
 		if (!optionalEmprestimo.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		Emprestimo emprestimo = optionalEmprestimo.get();
+		Emprestimo existingEmprestimo = optionalEmprestimo.get();
 		
-		emprestimo.setStatus(emprestimoDetails.getStatus());
+		existingEmprestimo.setData_pagamento(emprestimo.getData_pagamento());
 		
-		Emprestimo updatedEmprestimo = emprestimoService.alteraStatus(emprestimo.getStatus(), id);
-		return ResponseEntity.ok(emprestimoService.save(emprestimo));
+		return ResponseEntity.ok(emprestimoService.pagamentoMulta(existingEmprestimo));
+		
 	}
 
 	@DeleteMapping("/id/{id}")
@@ -92,7 +107,7 @@ public class EmprestimoController {
 		if (!optionalEmprestimo.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		
+
 		emprestimoService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}

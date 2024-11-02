@@ -12,6 +12,7 @@ import com.biblioteca.dto.UsuarioNoPassDTO;
 import com.biblioteca.entities.Emprestimo;
 import com.biblioteca.entities.Livro;
 import com.biblioteca.entities.Status;
+import com.biblioteca.entities.Status_Pagamento;
 import com.biblioteca.entities.Usuario;
 import com.biblioteca.exceptions.EmprestimoErrorException;
 import com.biblioteca.exceptions.UsuarioNotFoundException;
@@ -117,6 +118,16 @@ public class EmprestimoService {
 		emprestimo.calcularMulta();
 		return emprestimoRepository.save(emprestimo);
 
+	}
+	
+	public Emprestimo pagamentoMulta(Emprestimo emprestimo) {
+		
+		Emprestimo updateEmprestimo = emprestimo; 
+		
+		emprestimo.setData_pagamento(emprestimo.getData_pagamento());
+		
+		return emprestimoRepository.save(updateEmprestimo);
+	
 	}
 
 	public Emprestimo alteraStatus(Status status, Integer id) {

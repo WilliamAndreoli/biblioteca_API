@@ -87,6 +87,39 @@ public class UsuarioService {
         Usuario savedUsuario = usuarioRepository.save(usuario);
         return convertToNoPassDto(savedUsuario);
     }
+    
+    public UsuarioNoPassDTO update(UsuarioDTO usuarioDto) {
+        Usuario usuario = convertToEntity(usuarioDto);
+        
+//        Usuario existingUsuario = usuarioRepository.findByEmail(usuario.getEmail());
+//        
+//        if (existingUsuario != null) {
+//        	throw new UsuarioErrorException("Já existe um Usuário cadastrado com esse e-mail");
+//        }
+        
+        // Verificando se o Tipo_Usuario já existe
+        Tipo_Usuario tipoUsuario = usuario.getTipo_Usuario();
+        if (tipoUsuario != null) { 
+        	if (tipoUsuario.getDescricao() != null) {
+        		// Buscar o Tipo_usuario existente
+        		Tipo_Usuario existingTipoUsuario = tipoUsuarioRepository.findByDescricao(tipoUsuario.getDescricao());
+        		if (existingTipoUsuario != null) {
+                    // Se o Tipo_Usuario existe, associe-o ao Usuario
+                    usuario.setTipo_Usuario(existingTipoUsuario);
+                } else {
+                    // Se o Tipo_Usuario não existe, salve o novo Tipo_Usuario
+                    tipoUsuario = tipoUsuarioRepository.save(tipoUsuario);
+                    usuario.setTipo_Usuario(tipoUsuario);
+                }
+        	} else {
+                throw new RuntimeException("Tipo Usuário nulo ou inexistente: " + tipoUsuario.getDescricao());
+            }
+        }
+        
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+        Usuario savedUsuario = usuarioRepository.save(usuario);
+        return convertToNoPassDto(savedUsuario);
+    }
 
     @Transactional
     public void deleteById(Integer id) {
