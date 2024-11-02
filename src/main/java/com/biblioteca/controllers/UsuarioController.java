@@ -89,8 +89,16 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
         usuario.setNome(usuarioDTO.getNome());
-        usuario.setEmail(usuarioDTO.getEmail());
+        System.out.println(email);
+        System.out.println(usuarioDTO.getEmail());
+        if (usuarioDTO.getEmail() == null) {
+        	System.out.println("Entrando no if");
+        	usuario.setEmail(email);
+        } else {
+        	usuario.setEmail(usuarioDTO.getEmail());
+        }
         
+    
         if (usuarioDTO.getSenha() == null) {
             usuario.setSenha(usuario.getSenha());
         } else {
@@ -98,7 +106,7 @@ public class UsuarioController {
         }
      
         usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
-        UsuarioNoPassDTO updatedUsuario = usuarioService.save(usuario);
+        UsuarioNoPassDTO updatedUsuario = usuarioService.update(usuario);
         return ResponseEntity.ok(updatedUsuario);
     }
 
