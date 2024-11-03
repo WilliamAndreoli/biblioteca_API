@@ -85,14 +85,18 @@ public class UsuarioController {
 	@PutMapping("email/{email}")
     public ResponseEntity<UsuarioNoPassDTO> updateUsuario(@PathVariable String email, @RequestBody UsuarioDTO usuarioDTO) {
         UsuarioDTO usuario = usuarioService.findByEmail(email);
+        
         if (usuario == null) {
             return ResponseEntity.notFound().build();
         }
-        usuario.setNome(usuarioDTO.getNome());
-        System.out.println(email);
-        System.out.println(usuarioDTO.getEmail());
+       
+        if (usuarioDTO.getNome() == null) {
+        	usuario.setNome(usuario.getNome());
+        } else {
+        	usuario.setNome(usuarioDTO.getNome());	
+        }
+       
         if (usuarioDTO.getEmail() == null) {
-        	System.out.println("Entrando no if");
         	usuario.setEmail(email);
         } else {
         	usuario.setEmail(usuarioDTO.getEmail());
@@ -102,7 +106,7 @@ public class UsuarioController {
         if (usuarioDTO.getSenha() == null) {
             usuario.setSenha(usuario.getSenha());
         } else {
-        	usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));	
+        	usuario.setSenha(usuarioDTO.getSenha());	
         }
      
         usuario.setTipoUsuario(usuarioDTO.getTipoUsuario());
