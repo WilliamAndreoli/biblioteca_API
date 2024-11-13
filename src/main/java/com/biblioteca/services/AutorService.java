@@ -17,42 +17,49 @@ public class AutorService {
 
 	@Autowired
 	private AutorRepository autorRepository;
-	
+
 	public List<Autor> findAll() {
 		return autorRepository.findAll();
 	}
-	
+
 	public Autor findByNome(String nome) {
 		return autorRepository.findByNome(nome);
 	}
 
 	public Autor save(Autor autor) {
-		
+
 		Autor verificaAutor = autorRepository.findByNome(autor.getNome());
-		
-		if(verificaAutor == null) {
-			return autorRepository.save(autor);	
+
+		if (verificaAutor == null) {
+			return autorRepository.save(autor);
 		} else {
 			throw new AutorErrorException("Já existe um Autor cadastrado com esse nome.");
 		}
-		
-        
-    }
-	
+
+	}
+
+	public Autor update(Autor autor) {
+
+		Autor verificaAutor = autorRepository.findByNome(autor.getNome());
+
+		return autorRepository.save(autor);
+
+	}
+
 	public Autor alteraStatus(Status status, String nome) {
 		Autor autor = autorRepository.findByNome(nome);
-		
+
 		autor.setStatus(status);
-		
+
 		Autor savedAutor = autorRepository.save(autor);
-		
+
 		return savedAutor;
 	}
 
-	//Deleta por nome
+	// Deleta por nome
 	@Transactional
-    public void deleteByNome(String nome) {
-        autorRepository.deleteByNome(nome);
-    }
-	
+	public void deleteByNome(String nome) {
+		autorRepository.deleteByNome(nome);
+	}
+
 }

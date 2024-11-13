@@ -79,7 +79,7 @@ public class LivroController {
 		livro.setArea(livroDetails.getArea());
 		livro.setAno_publicacao(livroDetails.getAno_publicacao());
 
-		return ResponseEntity.ok(livroService.save(livro));
+		return ResponseEntity.ok(livroService.update(livro));
 	}
 	
 	@PutMapping("status/{titulo}")

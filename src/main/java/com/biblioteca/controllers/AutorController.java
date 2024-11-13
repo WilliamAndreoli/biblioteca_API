@@ -49,7 +49,7 @@ public class AutorController {
         }
         autor.setNome(autorDetails.getNome());
         autor.setEndereco(autorDetails.getEndereco());
-        return ResponseEntity.ok(autorService.save(autor));
+        return ResponseEntity.ok(autorService.update(autor));
     }
 	
 	@PutMapping("status/{nome}")

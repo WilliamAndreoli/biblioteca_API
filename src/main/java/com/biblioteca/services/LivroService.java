@@ -123,6 +123,65 @@ public class LivroService {
 		return livroRepository.save(livro);
 	}
 	
+	public Livro update(Livro livro) throws EntityNotFoundException {
+		Editora editora = livro.getEditora();
+
+		Area area = livro.getArea();
+
+		Set<Autor> autores = livro.getAutores();
+	
+		// Verifica editora
+		if (editora != null) {
+			if (editora.getNome() != null) {
+				Editora existingEditora = editoraRepository.findByNome(editora.getNome());
+				if (existingEditora != null) {
+					livro.setEditora(existingEditora);
+				} else {
+					throw new EditoraNotFoundException("Editora não encontrada com nome: " + editora.getNome());
+				}
+			}
+		} else {
+			throw new LivroErrorException("O nome da editora não pode ser nulo");
+		}
+		
+		// Verifica Area
+		if (area != null) {
+	        if (area.getDescricao() != null) {
+	            Area existingArea = areaRepository.findByDescricao(area.getDescricao());
+	            if (existingArea != null) {
+	                livro.setArea(existingArea);
+	            } else {
+	                throw new AreaNotFoundException("Área não encontrada com descrição: " + area.getDescricao());
+	            }
+	        }
+	    } else {
+            throw new LivroErrorException("A descrição da Área não pode ser nulo");
+        }
+
+		// Verifica Autores
+		if (autores != null && !autores.isEmpty()) {
+	        Set<Autor> autoresToSave = new HashSet<>();
+	        for (Autor autor : autores) {
+	            if (autor.getNome() != null) {
+	                Autor existingAutor = autorRepository.findByNome(autor.getNome());
+	                if (existingAutor != null) {
+	                    autoresToSave.add(existingAutor);
+	                } else {
+	                    throw new AutorNotFoundException("Autor não encontrado com nome: " + autor.getNome());
+	                }
+	            } else {
+	                autor = autorRepository.save(autor);
+	                autoresToSave.add(autor);
+	            }
+	        }
+	        livro.setAutores(autoresToSave);
+	    } else {
+	    	throw new LivroErrorException("Autores do Livro não pode ser nulo");
+	    }
+
+		return livroRepository.save(livro);
+	}
+	
 	public Livro alteraStatus(Status status, String titulo) {
 		Optional<Livro> livro = livroRepository.findByTitulo(titulo);
 		
