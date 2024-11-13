@@ -50,7 +50,7 @@ public class EditoraController {
         }
         editora.setNome(editoraDetails.getNome());
         editora.setEndereco(editoraDetails.getEndereco());
-        return ResponseEntity.ok(editoraService.save(editora));
+        return ResponseEntity.ok(editoraService.update(editora));
     }
 	
 	@PutMapping("status/{nome}")
