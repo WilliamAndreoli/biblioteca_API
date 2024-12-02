@@ -78,6 +78,7 @@ public class LivroController {
 		livro.setCodigo(livroDetails.getCodigo());
 		livro.setArea(livroDetails.getArea());
 		livro.setAno_publicacao(livroDetails.getAno_publicacao());
+		livro.setImg(livroDetails.getImg());
 
 		return ResponseEntity.ok(livroService.update(livro));
 	}
