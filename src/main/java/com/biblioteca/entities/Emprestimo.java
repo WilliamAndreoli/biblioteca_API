@@ -44,7 +44,7 @@ public class Emprestimo {
 
 	@ManyToOne
 	@JoinColumn(name = "usuario_id", nullable = false)
-	@JsonIgnoreProperties({ "senha", "email", "nome" }) // ou outras propriedades que você não quer atualizar
+	@JsonIgnoreProperties({ "senha", "email", "nome" }) 
 	private Usuario usuario;
 
 	public Integer getId() {
